@@ -1,0 +1,1024 @@
+/* Custom CSS properties for light angle animations */
+@property --primary-light-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --dark-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 105deg;
+}
+
+:root {
+  --inner-shadow-opacity: 1;
+  --outer-shadow-opacity: 1;
+  --reflection-opacity: 0.5;
+  --glossy-opacity: 0.3;
+  --shadow-layer1-opacity: 0.1;
+  --shadow-layer2-opacity: 0.1;
+  --shadow-layer3-opacity: 0.1;
+  --digit-color: rgba(50, 50, 50, 0.95);
+  --digit-glow: rgba(255, 107, 0, 0.3);
+  --second-hand-color: #F36505;
+  --hand-color: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: rgba(215, 215, 215, 1);
+  font-family: "Inter", -apple-system, sans-serif;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #1a1a1a;
+}
+
+body.dark-mode .glass-clock-face {
+  background-color: rgba(40, 40, 40, 0.5);
+  background-image: linear-gradient(
+    -75deg,
+    rgba(60, 60, 60, 0.3),
+    rgba(80, 80, 80, 0.4),
+    rgba(60, 60, 60, 0.3)
+  );
+}
+
+body.dark-mode .clock-number {
+  color: rgba(220, 220, 220, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .minute-marker {
+  background-color: rgba(180, 180, 180, 0.5);
+}
+
+body.dark-mode .logo-text {
+  color: rgba(220, 220, 220, 0.85);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .clock-date,
+body.dark-mode .clock-timezone {
+  color: rgba(200, 200, 200, 0.75);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode svg pattern circle {
+  fill: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode-toggle:active {
+  transform: scale(0.95);
+}
+
+.dark-mode-toggle svg {
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle .sun-icon {
+  position: absolute;
+  opacity: 1;
+  color: #f59e0b;
+}
+
+.dark-mode-toggle .moon-icon {
+  position: absolute;
+  opacity: 0;
+  color: #6366f1;
+}
+
+body.dark-mode .dark-mode-toggle {
+  background: rgba(40, 40, 40, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .dark-mode-toggle .sun-icon {
+  opacity: 0;
+  transform: rotate(180deg);
+}
+
+body.dark-mode .dark-mode-toggle .moon-icon {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.glass-clock-container {
+  position: relative;
+  width: 350px;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  margin-top: 20px;
+}
+
+/* Glass effect wrapper */
+.glass-effect-wrapper {
+  position: relative;
+  z-index: 2;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Shadow container - OUTER SHADOW */
+.glass-effect-shadow {
+  --shadow-offset: 3em;
+  position: absolute;
+  width: calc(100% + var(--shadow-offset));
+  height: calc(100% + var(--shadow-offset));
+  top: calc(0% - var(--shadow-offset) / 2);
+  left: calc(0% - var(--shadow-offset) / 2);
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  pointer-events: none;
+  z-index: 1;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 1;
+}
+
+.glass-effect-shadow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  width: calc(100% - var(--shadow-offset) - 0.25em);
+  height: calc(100% - var(--shadow-offset) - 0.25em);
+  top: calc(var(--shadow-offset) - 0.5em);
+  left: calc(var(--shadow-offset) - 0.875em);
+  padding: 0.125em;
+  box-sizing: border-box;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  overflow: visible;
+  opacity: 0.8;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 15px 25px rgba(0, 0, 0, 0.05),
+    0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.glass-clock-face {
+  --border-width: clamp(2px, 0.0625em, 4px);
+  position: relative;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.03);
+  background-image: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.01)
+  );
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  box-shadow: inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
+    inset 0 -0.4em 0.4em rgba(255, 255, 255, 0.5),
+    10px 5px 10px rgba(0, 0, 0, var(--shadow-layer1-opacity)),
+    10px 20px 20px rgba(0, 0, 0, var(--shadow-layer2-opacity)),
+    10px 55px 50px rgba(0, 0, 0, var(--shadow-layer3-opacity));
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
+}
+
+/* Enhanced clock border effect */
+.glass-clock-face::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  border-radius: 50%;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+      from var(--primary-light-angle) at 50% 50%,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0.2) 5% 40%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(255, 255, 255, 0.2) 60% 95%,
+      rgba(255, 255, 255, 1)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.9),
+    0 0 12px rgba(255, 255, 255, 0.8);
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1),
+    --primary-light-angle 500ms ease;
+  opacity: 0.9;
+  will-change: background, box-shadow;
+}
+
+/* Edge highlight ring */
+.glass-edge-highlight {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Dark edge shadow for bottom-right contrast - INNER SHADOW */
+.glass-edge-shadow {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  box-shadow: inset -5px 5px 15px rgba(0, 0, 0, 0.3),
+    inset -8px 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 7;
+  pointer-events: none;
+  opacity: var(--inner-shadow-opacity);
+}
+
+/* Dark edge effect for enhanced glossiness - INNER SHADOW */
+.glass-dark-edge {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  border-radius: 50%;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+    from var(--dark-edge-angle) at 50% 50%,
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0) 5% 40%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0) 60% 95%,
+    rgba(0, 0, 0, 0.5)
+  );
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1),
+    --dark-edge-angle 500ms ease;
+  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(0, 0, 0, 0.2);
+  opacity: var(--inner-shadow-opacity);
+  will-change: background;
+}
+
+/* Prominent glossy overlay */
+.glass-glossy-overlay {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 15%,
+    rgba(255, 255, 255, 0.5) 25%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 6;
+  mix-blend-mode: overlay;
+  opacity: var(--glossy-opacity);
+  filter: blur(10px);
+}
+
+/* Glass reflection overlay */
+.glass-reflection-overlay {
+  position: absolute;
+  width: 330px;
+  height: 330px;
+  border-radius: 50%;
+  top: 10px;
+  left: 10px;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.3) 30%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 15;
+  mix-blend-mode: overlay;
+  opacity: 0.7;
+  transform: rotate(-15deg);
+  filter: blur(10px);
+}
+
+/* Light reflection effect */
+.glass-reflection {
+  position: absolute;
+  width: 350px;
+  height: 175px;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 175px 175px 0 0;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: soft-light;
+  opacity: var(--reflection-opacity);
+  filter: blur(10px);
+}
+
+/* Hover effects */
+.glass-effect-wrapper:hover .glass-effect-shadow {
+  opacity: 0.9;
+}
+
+.glass-effect-wrapper:hover .glass-effect-shadow::after {
+  opacity: 0.85;
+}
+
+.glass-effect-wrapper:hover .glass-reflection-overlay {
+  opacity: 0.8;
+}
+
+.glass-effect-wrapper:active {
+  transform: scale3d(0.97, 0.97, 1);
+}
+
+.glass-effect-wrapper:active .glass-clock-face {
+  box-shadow: inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
+    inset 0 -0.4em 0.4em rgba(255, 255, 255, 0.4), 0 5px 20px rgba(0, 0, 0, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.1), 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Clock hour marks and numbers */
+.clock-hour-marks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 14;
+}
+
+/* Minute marker as lines */
+.minute-marker {
+  position: absolute;
+  width: 1px;
+  height: 10px;
+  background-color: var(--minute-marker-color);
+  top: 10px;
+  left: 175px;
+  transform-origin: center 165px;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+  opacity: var(--minute-marker-opacity);
+}
+
+.clock-number {
+  position: absolute;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--hour-number-color);
+  text-align: center;
+  width: 30px;
+  height: 20px;
+  line-height: 20px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  z-index: 15;
+  opacity: var(--hour-number-opacity);
+  transition: opacity 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+/* Clock hands */
+.clock-hand {
+  position: absolute;
+  transform-origin: center bottom;
+  bottom: 175px;
+  left: 175px;
+  z-index: 15;
+  will-change: transform;
+}
+
+.hour-hand {
+  width: 6px;
+  height: 70px;
+  background-color: var(--hand-color);
+  margin-left: -3px;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.minute-hand {
+  width: 4px;
+  height: 100px;
+  background-color: var(--hand-color);
+  margin-left: -2px;
+  border-radius: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Clock center dot */
+.clock-center-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--second-hand-color);
+  border-radius: 50%;
+  top: 169px;
+  left: 169px;
+  z-index: 17;
+  box-shadow: 0 0 8px rgba(255, 107, 0, 0.4);
+}
+
+/* Second hand container */
+.second-hand-container {
+  position: absolute;
+  width: 2px;
+  height: 120px;
+  top: 55px;
+  left: 174px;
+  transform-origin: 1px 120px;
+  z-index: 17;
+  will-change: transform;
+}
+
+/* Second hand */
+.second-hand {
+  position: absolute;
+  width: 2px;
+  height: 120px;
+  background-color: var(--second-hand-color);
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+}
+
+/* Second hand counterweight */
+.second-hand-counterweight {
+  position: absolute;
+  width: 6px;
+  height: 14px;
+  background-color: var(--second-hand-color);
+  bottom: -14px;
+  left: -2px;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+}
+
+/* Second hand shadow */
+.second-hand-shadow {
+  position: absolute;
+  width: 2px;
+  height: 120px;
+  top: 55px;
+  left: 174px;
+  transform-origin: 1px 120px;
+  z-index: 14;
+  filter: blur(2px);
+  opacity: 0.3;
+  will-change: transform;
+}
+
+/* Second hand shadow line */
+.second-hand-shadow::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 120px;
+  background: transparent;
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+}
+
+/* Second hand shadow counterweight */
+.second-hand-shadow::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 16px;
+  background: transparent;
+  bottom: -16px;
+  left: -3px;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+}
+
+/* Inner blur circle */
+.clock-center-blur {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  top: 157px;
+  left: 157px;
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 16;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
+    inset 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.clock-logo {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 70px;
+  left: 0;
+  z-index: 15;
+  opacity: 0.9;
+  user-select: none;
+  pointer-events: none;
+}
+
+.logo-text {
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(50, 50, 50, 0.85);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.logo-subtext {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(50, 50, 50, 0.7);
+  margin-top: 2px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.clock-date {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(50, 50, 50, 0.75);
+  text-align: center;
+  width: 140px;
+  height: auto;
+  line-height: 1;
+  bottom: 75px;
+  left: 105px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: 15;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: 0.05em;
+}
+
+.clock-timezone {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(50, 50, 50, 0.7);
+  text-align: center;
+  width: 140px;
+  height: auto;
+  line-height: 1;
+  bottom: 60px;
+  left: 105px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: 15;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Responsive Design */
+
+/* Tablet (iPad, iPad Pro) - 768px to 1024px */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .glass-clock-container {
+    width: 400px;
+    height: 400px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 400px;
+    height: 400px;
+  }
+
+  .glass-reflection-overlay {
+    width: 380px;
+    height: 380px;
+  }
+
+  .clock-number {
+    font-size: 18px;
+  }
+
+  .minute-marker {
+    transform-origin: center 190px;
+    left: 200px;
+  }
+
+  .clock-hand {
+    bottom: 200px;
+    left: 200px;
+  }
+
+  .hour-hand {
+    height: 80px;
+  }
+
+  .minute-hand {
+    height: 115px;
+  }
+
+  .second-hand-container {
+    height: 140px;
+    top: 60px;
+    left: 199px;
+    transform-origin: 1px 140px;
+  }
+
+  .second-hand {
+    height: 140px;
+  }
+
+  .second-hand-shadow {
+    height: 140px;
+    top: 60px;
+    left: 199px;
+    transform-origin: 1px 140px;
+  }
+
+  .clock-center-dot {
+    top: 194px;
+    left: 194px;
+  }
+
+  .clock-center-blur {
+    top: 182px;
+    left: 182px;
+  }
+
+  .logo-text {
+    font-size: 28px;
+  }
+
+  .clock-date {
+    bottom: 85px;
+    left: 130px;
+  }
+
+  .clock-timezone {
+    bottom: 70px;
+    left: 130px;
+  }
+}
+
+/* Mobile (phones) - up to 767px */
+@media screen and (max-width: 767px) {
+  .glass-clock-container {
+    width: 280px;
+    height: 280px;
+    margin-top: 10px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 280px;
+    height: 280px;
+  }
+
+  .glass-reflection-overlay {
+    width: 260px;
+    height: 260px;
+  }
+
+  .clock-number {
+    font-size: 13px;
+    width: 24px;
+    height: 16px;
+    line-height: 16px;
+  }
+
+  .minute-marker {
+    height: 8px;
+    top: 8px;
+    left: 140px;
+    transform-origin: center 132px;
+  }
+
+  .clock-hand {
+    bottom: 140px;
+    left: 140px;
+  }
+
+  .hour-hand {
+    width: 5px;
+    height: 56px;
+    margin-left: -2.5px;
+  }
+
+  .minute-hand {
+    width: 3px;
+    height: 80px;
+    margin-left: -1.5px;
+  }
+
+  .second-hand-container {
+    width: 2px;
+    height: 96px;
+    top: 44px;
+    left: 139px;
+    transform-origin: 1px 96px;
+  }
+
+  .second-hand {
+    width: 2px;
+    height: 96px;
+  }
+
+  .second-hand-counterweight {
+    width: 5px;
+    height: 11px;
+    left: -1.5px;
+  }
+
+  .second-hand-shadow {
+    width: 2px;
+    height: 96px;
+    top: 44px;
+    left: 139px;
+    transform-origin: 1px 96px;
+  }
+
+  .clock-center-dot {
+    width: 10px;
+    height: 10px;
+    top: 135px;
+    left: 135px;
+  }
+
+  .clock-center-blur {
+    width: 28px;
+    height: 28px;
+    top: 126px;
+    left: 126px;
+  }
+
+  .clock-logo {
+    top: 56px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .logo-subtext {
+    font-size: 8px;
+  }
+
+  .clock-date {
+    font-size: 9px;
+    width: 112px;
+    bottom: 60px;
+    left: 84px;
+  }
+
+  .clock-timezone {
+    font-size: 9px;
+    width: 112px;
+    bottom: 48px;
+    left: 84px;
+  }
+
+  /* Recalculate number positions for smaller clock */
+  .clock-hour-marks {
+    transform: scale(0.8);
+  }
+}
+
+/* Apple Watch and very small screens - up to 320px */
+@media screen and (max-width: 320px) {
+  .glass-clock-container {
+    width: 240px;
+    height: 240px;
+    margin-top: 5px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 240px;
+    height: 240px;
+  }
+
+  .glass-reflection-overlay {
+    width: 220px;
+    height: 220px;
+  }
+
+  .clock-number {
+    font-size: 11px;
+    width: 20px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  .minute-marker {
+    height: 6px;
+    top: 6px;
+    left: 120px;
+    transform-origin: center 114px;
+  }
+
+  .clock-hand {
+    bottom: 120px;
+    left: 120px;
+  }
+
+  .hour-hand {
+    width: 4px;
+    height: 48px;
+    margin-left: -2px;
+  }
+
+  .minute-hand {
+    width: 2.5px;
+    height: 68px;
+    margin-left: -1.25px;
+  }
+
+  .second-hand-container {
+    width: 1.5px;
+    height: 82px;
+    top: 38px;
+    left: 119.5px;
+    transform-origin: 0.75px 82px;
+  }
+
+  .second-hand {
+    width: 1.5px;
+    height: 82px;
+  }
+
+  .second-hand-counterweight {
+    width: 4px;
+    height: 9px;
+    left: -1.25px;
+  }
+
+  .second-hand-shadow {
+    width: 1.5px;
+    height: 82px;
+    top: 38px;
+    left: 119.5px;
+    transform-origin: 0.75px 82px;
+  }
+
+  .clock-center-dot {
+    width: 8px;
+    height: 8px;
+    top: 116px;
+    left: 116px;
+  }
+
+  .clock-center-blur {
+    width: 24px;
+    height: 24px;
+    top: 108px;
+    left: 108px;
+  }
+
+  .clock-logo {
+    top: 48px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+  }
+
+  .logo-subtext {
+    font-size: 7px;
+  }
+
+  .clock-date {
+    font-size: 8px;
+    width: 96px;
+    bottom: 52px;
+    left: 72px;
+  }
+
+  .clock-timezone {
+    font-size: 8px;
+    width: 96px;
+    bottom: 42px;
+    left: 72px;
+  }
+
+  /* Recalculate number positions for smaller clock */
+  .clock-hour-marks {
+    transform: scale(0.68);
+  }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+  .glass-clock-container {
+    width: 260px;
+    height: 260px;
+    margin-top: 5px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 260px;
+    height: 260px;
+  }
+}
+
