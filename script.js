@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Create clock hour marks and numbers
   const hourMarksContainer = document.getElementById("clock-hour-marks");
 
+  // Get clock size for responsive positioning
+  const clockFace = document.querySelector('.glass-clock-face');
+  const clockSize = clockFace ? clockFace.offsetWidth : 350;
+  const center = clockSize / 2;
+  const radius = clockSize * 0.414; // Proportional radius (145/350 = 0.414)
+
   // Create hour numbers and minute markers with perfect spacing
   for (let i = 0; i < 60; i++) {
     if (i % 5 === 0) {
@@ -16,9 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Calculate position for numbers - perfectly centered around the clock
       const angle = (i * 6 * Math.PI) / 180;
-      const radius = 145; // Distance from center
-      const left = 175 + Math.sin(angle) * radius - 15;
-      const top = 175 - Math.cos(angle) * radius - 10;
+      const left = center + Math.sin(angle) * radius - 12;
+      const top = center - Math.cos(angle) * radius - 9;
 
       hourNumber.style.left = `${left}px`;
       hourNumber.style.top = `${top}px`;
