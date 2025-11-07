@@ -1,17 +1,16 @@
-/* -------------------------------------------------------------------------- */
-/* VARIABLE DEFINITIONS & CUSTOM PROPERTIES */
-/* -------------------------------------------------------------------------- */
-@supports (background: conic-gradient(red, blue)) {
-  @property --primary-light-angle {
-    syntax: "<angle>";
-    inherits: false;
-    initial-value: -75deg;
-  }
-  @property --dark-edge-angle {
-    syntax: "<angle>";
-    inherits: false;
-    initial-value: 105deg;
-  }
+what about css 
+
+/* Custom CSS properties for light angle animations */
+@property --primary-light-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --dark-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 105deg;
 }
 
 :root {
@@ -26,17 +25,8 @@
   --digit-glow: rgba(255, 107, 0, 0.3);
   --second-hand-color: #F36505;
   --hand-color: #000000;
-
-  /* Added defaults */
-  --minute-marker-color: rgba(0, 0, 0, 0.5);
-  --minute-marker-opacity: 0.6;
-  --hour-number-color: rgba(50, 50, 50, 0.9);
-  --hour-number-opacity: 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* BASE ELEMENTS */
-/* -------------------------------------------------------------------------- */
 * {
   box-sizing: border-box;
 }
@@ -57,9 +47,7 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* -------------------------------------------------------------------------- */
-/* DARK MODE */
-/* -------------------------------------------------------------------------- */
+/* Dark Mode Styles */
 body.dark-mode {
   background-color: #1a1a1a;
 }
@@ -98,9 +86,7 @@ body.dark-mode svg pattern circle {
   fill: rgba(255, 255, 255, 0.1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* DARK MODE TOGGLE */
-/* -------------------------------------------------------------------------- */
+/* Dark Mode Toggle Button */
 .dark-mode-toggle {
   position: fixed;
   top: 20px;
@@ -114,7 +100,7 @@ body.dark-mode svg pattern circle {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
@@ -131,7 +117,7 @@ body.dark-mode svg pattern circle {
 }
 
 .dark-mode-toggle svg {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .dark-mode-toggle .sun-icon {
@@ -161,9 +147,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   transform: rotate(0deg);
 }
 
-/* -------------------------------------------------------------------------- */
-/* CLOCK LAYOUT */
-/* -------------------------------------------------------------------------- */
 .glass-clock-container {
   position: relative;
   width: 350px;
@@ -175,34 +158,21 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   margin-top: 20px;
 }
 
-/* Shared dimensions for all circular layers */
-.glass-clock-face,
-.glass-glossy-overlay,
-.glass-edge-highlight,
-.glass-edge-shadow,
-.glass-dark-edge,
-.glass-reflection {
-  width: 350px;
-  height: 350px;
-}
-
-/* Glass wrapper */
+/* Glass effect wrapper */
 .glass-effect-wrapper {
   position: relative;
   z-index: 2;
   border-radius: 50%;
   background: transparent;
   pointer-events: none;
-  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
   perspective: 1000px;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform;
 }
 
-/* -------------------------------------------------------------------------- */
-/* SHADOWS & LAYERS */
-/* -------------------------------------------------------------------------- */
+/* Shadow container - OUTER SHADOW */
 .glass-effect-shadow {
   --shadow-offset: 3em;
   position: absolute;
@@ -211,11 +181,11 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   top: calc(0% - var(--shadow-offset) / 2);
   left: calc(0% - var(--shadow-offset) / 2);
   filter: blur(10px);
+  -webkit-filter: blur(10px);
   pointer-events: none;
   z-index: 1;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
   opacity: 1;
-  transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
-  contain: paint;
 }
 
 .glass-effect-shadow::after {
@@ -228,18 +198,21 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   height: calc(100% - var(--shadow-offset) - 0.25em);
   top: calc(var(--shadow-offset) - 0.5em);
   left: calc(var(--shadow-offset) - 0.875em);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05),
-              0 15px 25px rgba(0, 0, 0, 0.05),
-              0 20px 40px rgba(0, 0, 0, 0.05);
+  padding: 0.125em;
+  box-sizing: border-box;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  overflow: visible;
   opacity: 0.8;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 15px 25px rgba(0, 0, 0, 0.05),
+    0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
-/* -------------------------------------------------------------------------- */
-/* MAIN CLOCK FACE */
-/* -------------------------------------------------------------------------- */
 .glass-clock-face {
   --border-width: clamp(2px, 0.0625em, 4px);
   position: relative;
+  width: 350px;
+  height: 350px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.03);
   background-image: linear-gradient(
@@ -250,26 +223,36 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   );
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
-  box-shadow:
-    inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
+  box-shadow: inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
     inset 0 -0.4em 0.4em rgba(255, 255, 255, 0.5),
     10px 5px 10px rgba(0, 0, 0, var(--shadow-layer1-opacity)),
     10px 20px 20px rgba(0, 0, 0, var(--shadow-layer2-opacity)),
     10px 55px 50px rgba(0, 0, 0, var(--shadow-layer3-opacity));
+  z-index: 3;
   overflow: hidden;
+  pointer-events: auto;
   cursor: pointer;
-  transition: box-shadow 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
   user-select: none;
+  -webkit-user-select: none;
   transform-style: preserve-3d;
-  contain: layout paint;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
 }
 
-/* Border effect */
+/* Enhanced clock border effect */
 .glass-clock-face::after {
   content: "";
   position: absolute;
+  z-index: 10;
   inset: 0;
   border-radius: 50%;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
   background: conic-gradient(
       from var(--primary-light-angle) at 50% 50%,
       rgba(255, 255, 255, 1),
@@ -281,28 +264,56 @@ body.dark-mode .dark-mode-toggle .moon-icon {
     linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  -webkit-mask-composite: destination-out;
-  box-shadow:
-    inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.9),
+  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.9),
     0 0 12px rgba(255, 255, 255, 0.8);
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1),
+    --primary-light-angle 500ms ease;
   opacity: 0.9;
-  transition: background 400ms ease, box-shadow 400ms ease;
+  will-change: background, box-shadow;
 }
 
-/* Other glass layers */
-.glass-edge-highlight,
-.glass-edge-shadow,
-.glass-dark-edge,
-.glass-glossy-overlay,
-.glass-reflection-overlay,
-.glass-reflection {
-  contain: paint;
+/* Edge highlight ring */
+.glass-edge-highlight {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
-/* Dark edge */
+/* Dark edge shadow for bottom-right contrast - INNER SHADOW */
+.glass-edge-shadow {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  box-shadow: inset -5px 5px 15px rgba(0, 0, 0, 0.3),
+    inset -8px 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 7;
+  pointer-events: none;
+  opacity: var(--inner-shadow-opacity);
+}
+
+/* Dark edge effect for enhanced glossiness - INNER SHADOW */
 .glass-dark-edge {
   position: absolute;
+  z-index: 9;
+  inset: 0;
   border-radius: 50%;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
   background: conic-gradient(
     from var(--dark-edge-angle) at 50% 50%,
     rgba(0, 0, 0, 0.5),
@@ -313,29 +324,115 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   );
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  -webkit-mask-composite: destination-out;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1),
+    --dark-edge-angle 500ms ease;
+  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(0, 0, 0, 0.2);
   opacity: var(--inner-shadow-opacity);
-  transition: background 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: background;
 }
 
-/* Glossy & reflection overlays */
-.glass-glossy-overlay,
-.glass-reflection-overlay,
-.glass-reflection {
+/* Prominent glossy overlay */
+.glass-glossy-overlay {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 15%,
+    rgba(255, 255, 255, 0.5) 25%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 6;
+  mix-blend-mode: overlay;
+  opacity: var(--glossy-opacity);
   filter: blur(10px);
-  will-change: opacity, transform;
 }
 
-/* -------------------------------------------------------------------------- */
-/* CLOCK MARKINGS & HANDS */
-/* -------------------------------------------------------------------------- */
+/* Glass reflection overlay */
+.glass-reflection-overlay {
+  position: absolute;
+  width: 330px;
+  height: 330px;
+  border-radius: 50%;
+  top: 10px;
+  left: 10px;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.3) 30%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 15;
+  mix-blend-mode: overlay;
+  opacity: 0.7;
+  transform: rotate(-15deg);
+  filter: blur(10px);
+}
+
+/* Light reflection effect */
+.glass-reflection {
+  position: absolute;
+  width: 350px;
+  height: 175px;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 175px 175px 0 0;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: soft-light;
+  opacity: var(--reflection-opacity);
+  filter: blur(10px);
+}
+
+/* Hover effects */
+.glass-effect-wrapper:hover .glass-effect-shadow {
+  opacity: 0.9;
+}
+
+.glass-effect-wrapper:hover .glass-effect-shadow::after {
+  opacity: 0.85;
+}
+
+.glass-effect-wrapper:hover .glass-reflection-overlay {
+  opacity: 0.8;
+}
+
+.glass-effect-wrapper:active {
+  transform: scale3d(0.97, 0.97, 1);
+}
+
+.glass-effect-wrapper:active .glass-clock-face {
+  box-shadow: inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
+    inset 0 -0.4em 0.4em rgba(255, 255, 255, 0.4), 0 5px 20px rgba(0, 0, 0, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.1), 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Clock hour marks and numbers */
 .clock-hour-marks {
   position: absolute;
-  inset: 0;
-  z-index: 4;
-  contain: layout paint;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 14;
 }
 
+/* Minute marker as lines */
 .minute-marker {
   position: absolute;
   width: 1px;
@@ -353,23 +450,26 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   font-size: 16px;
   font-weight: 500;
   color: var(--hour-number-color);
+  text-align: center;
   width: 30px;
   height: 20px;
   line-height: 20px;
-  text-align: center;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-  z-index: 5;
+  z-index: 15;
   opacity: var(--hour-number-opacity);
+  transition: opacity 0.3s ease;
   user-select: none;
+  -webkit-user-select: none;
   pointer-events: none;
 }
 
-/* Hands */
+/* Clock hands */
 .clock-hand {
   position: absolute;
   transform-origin: center bottom;
   bottom: 175px;
   left: 175px;
+  z-index: 15;
   will-change: transform;
 }
 
@@ -391,27 +491,45 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Second hand */
-.second-hand-container,
-.second-hand-shadow {
+/* Clock center dot */
+.clock-center-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--second-hand-color);
+  border-radius: 50%;
+  top: 169px;
+  left: 169px;
+  z-index: 17;
+  box-shadow: 0 0 8px rgba(255, 107, 0, 0.4);
+}
+
+/* Second hand container */
+.second-hand-container {
   position: absolute;
   width: 2px;
   height: 120px;
   top: 55px;
   left: 174px;
   transform-origin: 1px 120px;
+  z-index: 17;
   will-change: transform;
 }
 
+/* Second hand */
 .second-hand {
+  position: absolute;
   width: 2px;
   height: 120px;
   background-color: var(--second-hand-color);
   bottom: 0;
+  left: 0;
   box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
 }
 
+/* Second hand counterweight */
 .second-hand-counterweight {
+  position: absolute;
   width: 6px;
   height: 14px;
   background-color: var(--second-hand-color);
@@ -421,34 +539,69 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
 }
 
+/* Second hand shadow */
 .second-hand-shadow {
+  position: absolute;
+  width: 2px;
+  height: 120px;
+  top: 55px;
+  left: 174px;
+  transform-origin: 1px 120px;
+  z-index: 14;
   filter: blur(2px);
   opacity: 0.3;
-  contain: paint;
+  will-change: transform;
 }
 
-/* Center dot */
-.clock-center-dot {
+/* Second hand shadow line */
+.second-hand-shadow::before {
+  content: "";
   position: absolute;
-  width: 12px;
-  height: 12px;
-  background: var(--second-hand-color);
-  border-radius: 50%;
-  top: 169px;
-  left: 169px;
-  z-index: 6;
-  box-shadow: 0 0 8px rgba(255, 107, 0, 0.4);
+  width: 2px;
+  height: 120px;
+  background: transparent;
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
 }
 
-/* -------------------------------------------------------------------------- */
-/* TEXT LABELS */
-/* -------------------------------------------------------------------------- */
+/* Second hand shadow counterweight */
+.second-hand-shadow::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 16px;
+  background: transparent;
+  bottom: -16px;
+  left: -3px;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+}
+
+/* Inner blur circle */
+.clock-center-blur {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  top: 157px;
+  left: 157px;
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 16;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
+    inset 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
 .clock-logo {
   position: absolute;
   width: 100%;
   text-align: center;
   top: 70px;
   left: 0;
+  z-index: 15;
+  opacity: 0.9;
   user-select: none;
   pointer-events: none;
 }
@@ -462,59 +615,414 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
-.clock-date,
-.clock-timezone {
+.logo-subtext {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(50, 50, 50, 0.7);
+  margin-top: 2px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.clock-date {
   position: absolute;
   font-size: 11px;
-  text-align: center;
+  font-weight: 400;
   color: rgba(50, 50, 50, 0.75);
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+  text-align: center;
   width: 140px;
+  height: auto;
+  line-height: 1;
+  bottom: 75px;
   left: 105px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: 15;
+  user-select: none;
   pointer-events: none;
   letter-spacing: 0.05em;
 }
 
-.clock-date {
-  bottom: 75px;
-}
-
 .clock-timezone {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(50, 50, 50, 0.7);
+  text-align: center;
+  width: 140px;
+  height: auto;
+  line-height: 1;
   bottom: 60px;
+  left: 105px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: 15;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-/* -------------------------------------------------------------------------- */
-/* REDUCED MOTION & RESPONSIVENESS */
-/* -------------------------------------------------------------------------- */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition: none !important;
-    animation: none !important;
-  }
-}
+/* Responsive Design */
 
-/* Tablet */
+/* Tablet (iPad, iPad Pro) - 768px to 1024px */
 @media screen and (max-width: 1024px) and (min-width: 768px) {
   .glass-clock-container {
     width: 400px;
     height: 400px;
   }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 400px;
+    height: 400px;
+  }
+
+  .glass-reflection-overlay {
+    width: 380px;
+    height: 380px;
+  }
+
+  .clock-number {
+    font-size: 18px;
+  }
+
+  .minute-marker {
+    transform-origin: center 190px;
+    left: 200px;
+  }
+
+  .clock-hand {
+    bottom: 200px;
+    left: 200px;
+  }
+
+  .hour-hand {
+    height: 80px;
+  }
+
+  .minute-hand {
+    height: 115px;
+  }
+
+  .second-hand-container {
+    height: 140px;
+    top: 60px;
+    left: 199px;
+    transform-origin: 1px 140px;
+  }
+
+  .second-hand {
+    height: 140px;
+  }
+
+  .second-hand-shadow {
+    height: 140px;
+    top: 60px;
+    left: 199px;
+    transform-origin: 1px 140px;
+  }
+
+  .clock-center-dot {
+    top: 194px;
+    left: 194px;
+  }
+
+  .clock-center-blur {
+    top: 182px;
+    left: 182px;
+  }
+
+  .logo-text {
+    font-size: 28px;
+  }
+
+  .clock-date {
+    bottom: 85px;
+    left: 130px;
+  }
+
+  .clock-timezone {
+    bottom: 70px;
+    left: 130px;
+  }
 }
 
-/* Mobile */
+/* Mobile (phones) - up to 767px */
 @media screen and (max-width: 767px) {
   .glass-clock-container {
     width: 280px;
     height: 280px;
+    margin-top: 10px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 280px;
+    height: 280px;
+  }
+
+  .glass-reflection-overlay {
+    width: 260px;
+    height: 260px;
+  }
+
+  .clock-number {
+    font-size: 14px;
+    width: 24px;
+    height: 18px;
+    line-height: 18px;
+    font-weight: 600;
+  }
+
+  .minute-marker {
+    height: 8px;
+    top: 8px;
+    left: 140px;
+    transform-origin: center 132px;
+  }
+
+  .clock-hand {
+    bottom: 140px;
+    left: 140px;
+  }
+
+  .hour-hand {
+    width: 5px;
+    height: 56px;
+    margin-left: -2.5px;
+  }
+
+  .minute-hand {
+    width: 3px;
+    height: 80px;
+    margin-left: -1.5px;
+  }
+
+  .second-hand-container {
+    width: 2px;
+    height: 96px;
+    top: 44px;
+    left: 139px;
+    transform-origin: 1px 96px;
+  }
+
+  .second-hand {
+    width: 2px;
+    height: 96px;
+  }
+
+  .second-hand-counterweight {
+    width: 5px;
+    height: 11px;
+    left: -1.5px;
+  }
+
+  .second-hand-shadow {
+    width: 2px;
+    height: 96px;
+    top: 44px;
+    left: 139px;
+    transform-origin: 1px 96px;
+  }
+
+  .clock-center-dot {
+    width: 10px;
+    height: 10px;
+    top: 135px;
+    left: 135px;
+  }
+
+  .clock-center-blur {
+    width: 28px;
+    height: 28px;
+    top: 126px;
+    left: 126px;
+  }
+
+  .clock-logo {
+    top: 56px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .logo-subtext {
+    font-size: 8px;
+  }
+
+  .clock-date {
+    font-size: 9px;
+    width: 112px;
+    bottom: 60px;
+    left: 84px;
+  }
+
+  .clock-timezone {
+    font-size: 9px;
+    width: 112px;
+    bottom: 48px;
+    left: 84px;
   }
 }
 
-/* Landscape small screens */
+/* Apple Watch and very small screens - up to 320px */
+@media screen and (max-width: 320px) {
+  .glass-clock-container {
+    width: 240px;
+    height: 240px;
+    margin-top: 5px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
+    width: 240px;
+    height: 240px;
+  }
+
+  .glass-reflection-overlay {
+    width: 220px;
+    height: 220px;
+  }
+
+  .clock-number {
+    font-size: 12px;
+    width: 20px;
+    height: 16px;
+    line-height: 16px;
+    font-weight: 700;
+  }
+  
+  .dark-mode-toggle {
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .dark-mode-toggle svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .minute-marker {
+    height: 6px;
+    top: 6px;
+    left: 120px;
+    transform-origin: center 114px;
+  }
+
+  .clock-hand {
+    bottom: 120px;
+    left: 120px;
+  }
+
+  .hour-hand {
+    width: 4px;
+    height: 48px;
+    margin-left: -2px;
+  }
+
+  .minute-hand {
+    width: 2.5px;
+    height: 68px;
+    margin-left: -1.25px;
+  }
+
+  .second-hand-container {
+    width: 1.5px;
+    height: 82px;
+    top: 38px;
+    left: 119.5px;
+    transform-origin: 0.75px 82px;
+  }
+
+  .second-hand {
+    width: 1.5px;
+    height: 82px;
+  }
+
+  .second-hand-counterweight {
+    width: 4px;
+    height: 9px;
+    left: -1.25px;
+  }
+
+  .second-hand-shadow {
+    width: 1.5px;
+    height: 82px;
+    top: 38px;
+    left: 119.5px;
+    transform-origin: 0.75px 82px;
+  }
+
+  .clock-center-dot {
+    width: 8px;
+    height: 8px;
+    top: 116px;
+    left: 116px;
+  }
+
+  .clock-center-blur {
+    width: 24px;
+    height: 24px;
+    top: 108px;
+    left: 108px;
+  }
+
+  .clock-logo {
+    top: 48px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+  }
+
+  .logo-subtext {
+    font-size: 7px;
+  }
+
+  .clock-date {
+    font-size: 8px;
+    width: 96px;
+    bottom: 52px;
+    left: 72px;
+  }
+
+  .clock-timezone {
+    font-size: 8px;
+    width: 96px;
+    bottom: 42px;
+    left: 72px;
+  }
+}
+
+/* Landscape orientation adjustments */
 @media screen and (max-height: 600px) and (orientation: landscape) {
   .glass-clock-container {
+    width: 260px;
+    height: 260px;
+    margin-top: 5px;
+  }
+
+  .glass-clock-face,
+  .glass-glossy-overlay,
+  .glass-edge-highlight,
+  .glass-edge-shadow,
+  .glass-dark-edge,
+  .glass-reflection {
     width: 260px;
     height: 260px;
   }
