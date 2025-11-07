@@ -1,9 +1,19 @@
 // =========================
-//  STATE & GLOBAL REFS
+//  CONSTANTS & STATE
 // =========================
+
+// Used for the date label (optimization #1: hoisted from inside the function)
+const MONTHS = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
 let secondsAngle = 0;
 let secondsAnimationFrameId = null;
-let secondsMode = "smooth"; // "smooth" | "tick1" | "tick2" | "highFreq"
+
+// Optimization #3: secondsMode is const because we never reassign it
+// If you later want to switch modes dynamically, change this back to `let`.
+const secondsMode = "smooth"; // "smooth" | "tick1" | "tick2" | "highFreq"
 
 // DOM references (filled on DOMContentLoaded)
 let hourMarksContainer;
@@ -114,6 +124,12 @@ function setupGlassStyles() {
 //  CLOCK LOGIC
 // =========================
 function startClock() {
+  // Optimization #4: defensive check – doesn't affect your page, but prevents errors
+  if (!hourHand || !minuteHand || !secondHandContainer) {
+    // Required elements missing — do nothing
+    return;
+  }
+
   // Start hour + minute hands (smooth, real-time)
   updateHourAndMinuteHands();
   // Start seconds hand animation (mode-dependent)
@@ -143,14 +159,10 @@ function updateHourAndMinuteHands() {
     minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
   }
 
-  // Date: only set once
+  // Date: only set once (now using MONTHS constant, optimization #1)
   if (dateDisplay && !dateDisplay.textContent) {
-    const months = [
-      "Jan","Feb","Mar","Apr","May","Jun",
-      "Jul","Aug","Sep","Oct","Nov","Dec"
-    ];
     dateDisplay.textContent =
-      `${months[now.getMonth()]} ${now.getDate()}`;
+      `${MONTHS[now.getMonth()]} ${now.getDate()}`;
   }
 
   // Timezone: only set once
@@ -179,13 +191,13 @@ function animateSecondHand() {
 
   switch (secondsMode) {
     case "tick1":   // tick per second
-      animateTickMode(6, 1);
+      animateTickMode(1); // optimization #2: only ticksPerSecond
       break;
     case "tick2":   // 2 ticks per second
-      animateTickMode(3, 2);
+      animateTickMode(2);
       break;
     case "highFreq": // 8 ticks per second
-      animateTickMode(0.75, 8);
+      animateTickMode(8);
       break;
     case "smooth":
     default:
@@ -194,8 +206,8 @@ function animateSecondHand() {
   }
 }
 
-// Tick animation (uses setTimeout like original)
-function animateTickMode(degreesPerTick, ticksPerSecond) {
+// Optimization #2: animateTickMode now only takes ticksPerSecond
+function animateTickMode(ticksPerSecond) {
   let lastTickTime = 0;
   const intervalMs = 1000 / ticksPerSecond;
 
