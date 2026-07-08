@@ -13,7 +13,7 @@ let secondsAnimationFrameId = null;
 
 // Optimization #3: secondsMode is const because we never reassign it
 // If you later want to switch modes dynamically, change this back to `let`.
-const secondsMode = "smooth"; // "smooth" | "tick1" | "tick2" | "highFreq"
+const secondsMode = "highFreq"; // "smooth" | "tick1" | "tick2" | "highFreq"
 
 // DOM references (filled on DOMContentLoaded)
 let hourMarksContainer;
@@ -196,8 +196,8 @@ function animateSecondHand() {
     case "tick2":   // 2 ticks per second
       animateTickMode(2);
       break;
-    case "highFreq": // 8 ticks per second
-      animateTickMode(8);
+    case "highFreq": // 10 ticks per second (5Hz balance, i.e. 36,000 vph)
+      animateTickMode(10);
       break;
     case "smooth":
     default:

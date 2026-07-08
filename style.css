@@ -1,5 +1,3 @@
-what about css 
-
 /* Custom CSS properties for light angle animations */
 @property --primary-light-angle {
   syntax: "<angle>";
@@ -25,6 +23,10 @@ what about css
   --digit-glow: rgba(255, 107, 0, 0.3);
   --second-hand-color: #F36505;
   --hand-color: #000000;
+  --minute-marker-color: rgba(0, 0, 0, 0.5);
+  --minute-marker-opacity: 0.6;
+  --hour-number-color: rgba(50, 50, 50, 0.9);
+  --hour-number-opacity: 1;
 }
 
 * {
@@ -474,19 +476,19 @@ body.dark-mode .dark-mode-toggle .moon-icon {
 }
 
 .hour-hand {
-  width: 6px;
-  height: 70px;
+  width: 10px;
+  height: 95px;
   background-color: var(--hand-color);
-  margin-left: -3px;
+  margin-left: -5px;
   border-radius: 3px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .minute-hand {
-  width: 4px;
-  height: 100px;
+  width: 7px;
+  height: 140px;
   background-color: var(--hand-color);
-  margin-left: -2px;
+  margin-left: -3.5px;
   border-radius: 2px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
@@ -536,6 +538,19 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   bottom: -14px;
   left: -2px;
   border-radius: 0 0 4px 4px;
+  box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+}
+
+/* Second hand tip circle */
+.second-hand-tip {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: var(--second-hand-color);
+  border-radius: 50%;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
   box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
 }
 
@@ -701,11 +716,15 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   }
 
   .hour-hand {
-    height: 80px;
+    width: 11px;
+    height: 110px;
+    margin-left: -5.5px;
   }
 
   .minute-hand {
-    height: 115px;
+    width: 8px;
+    height: 160px;
+    margin-left: -4px;
   }
 
   .second-hand-container {
@@ -717,6 +736,11 @@ body.dark-mode .dark-mode-toggle .moon-icon {
 
   .second-hand {
     height: 140px;
+  }
+
+  .second-hand-tip {
+    width: 9px;
+    height: 9px;
   }
 
   .second-hand-shadow {
@@ -795,15 +819,15 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   }
 
   .hour-hand {
-    width: 5px;
-    height: 56px;
-    margin-left: -2.5px;
+    width: 8px;
+    height: 77px;
+    margin-left: -4px;
   }
 
   .minute-hand {
-    width: 3px;
-    height: 80px;
-    margin-left: -1.5px;
+    width: 6px;
+    height: 112px;
+    margin-left: -3px;
   }
 
   .second-hand-container {
@@ -823,6 +847,11 @@ body.dark-mode .dark-mode-toggle .moon-icon {
     width: 5px;
     height: 11px;
     left: -1.5px;
+  }
+
+  .second-hand-tip {
+    width: 6px;
+    height: 6px;
   }
 
   .second-hand-shadow {
@@ -930,15 +959,15 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   }
 
   .hour-hand {
-    width: 4px;
-    height: 48px;
-    margin-left: -2px;
+    width: 7px;
+    height: 66px;
+    margin-left: -3.5px;
   }
 
   .minute-hand {
-    width: 2.5px;
-    height: 68px;
-    margin-left: -1.25px;
+    width: 5px;
+    height: 96px;
+    margin-left: -2.5px;
   }
 
   .second-hand-container {
@@ -958,6 +987,11 @@ body.dark-mode .dark-mode-toggle .moon-icon {
     width: 4px;
     height: 9px;
     left: -1.25px;
+  }
+
+  .second-hand-tip {
+    width: 5px;
+    height: 5px;
   }
 
   .second-hand-shadow {
