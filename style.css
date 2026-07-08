@@ -1,26 +1,32 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/Inter-Variable.woff2") format("woff2");
+}
+
 /* Custom CSS properties for light angle animations */
 @property --primary-light-angle {
   syntax: "<angle>";
   inherits: false;
-  initial-value: -75deg;
+  initial-value: -45deg;
 }
 
 @property --dark-edge-angle {
   syntax: "<angle>";
   inherits: false;
-  initial-value: 105deg;
+  initial-value: 135deg;
 }
 
 :root {
-  --inner-shadow-opacity: 1;
+  --inner-shadow-opacity: 0.15;
   --outer-shadow-opacity: 1;
   --reflection-opacity: 0.5;
   --glossy-opacity: 0.3;
   --shadow-layer1-opacity: 0.1;
   --shadow-layer2-opacity: 0.1;
   --shadow-layer3-opacity: 0.1;
-  --digit-color: rgba(50, 50, 50, 0.95);
-  --digit-glow: rgba(255, 107, 0, 0.3);
   --second-hand-color: #F36505;
   --hand-color: #000000;
   --minute-marker-color: rgba(0, 0, 0, 0.5);
@@ -73,11 +79,7 @@ body.dark-mode .minute-marker {
   background-color: rgba(180, 180, 180, 0.5);
 }
 
-body.dark-mode .logo-text {
-  color: rgba(220, 220, 220, 0.85);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
+body.dark-mode .logo-subtext,
 body.dark-mode .clock-date,
 body.dark-mode .clock-timezone {
   color: rgba(200, 200, 200, 0.75);
@@ -621,15 +623,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   pointer-events: none;
 }
 
-.logo-text {
-  font-family: "Inter", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  color: rgba(50, 50, 50, 0.85);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-}
-
 .logo-subtext {
   font-family: "Inter", sans-serif;
   font-size: 10px;
@@ -638,6 +631,7 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   color: rgba(50, 50, 50, 0.7);
   margin-top: 2px;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
 }
 
 .clock-date {
@@ -656,6 +650,7 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   user-select: none;
   pointer-events: none;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .clock-timezone {
@@ -758,10 +753,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   .clock-center-blur {
     top: 182px;
     left: 182px;
-  }
-
-  .logo-text {
-    font-size: 28px;
   }
 
   .clock-date {
@@ -878,10 +869,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
 
   .clock-logo {
     top: 56px;
-  }
-
-  .logo-text {
-    font-size: 20px;
   }
 
   .logo-subtext {
@@ -1018,10 +1005,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
 
   .clock-logo {
     top: 48px;
-  }
-
-  .logo-text {
-    font-size: 16px;
   }
 
   .logo-subtext {

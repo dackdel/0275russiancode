@@ -3,10 +3,7 @@
 // =========================
 
 // Used for the date label (optimization #1: hoisted from inside the function)
-const MONTHS = [
-  "Jan","Feb","Mar","Apr","May","Jun",
-  "Jul","Aug","Sep","Oct","Nov","Dec"
-];
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 let secondsAngle = 0;
 let secondsAnimationFrameId = null;
@@ -18,8 +15,6 @@ const secondsMode = "highFreq"; // "smooth" | "tick1" | "tick2" | "highFreq"
 // DOM references (filled on DOMContentLoaded)
 let hourMarksContainer;
 let clockFace;
-let glossyOverlay;
-let reflectionOverlay;
 let hourHand;
 let minuteHand;
 let secondHandContainer;
@@ -34,8 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cache DOM references
   hourMarksContainer   = document.getElementById("clock-hour-marks");
   clockFace            = document.querySelector(".glass-clock-face");
-  glossyOverlay        = document.getElementById("glass-glossy-overlay");
-  reflectionOverlay    = document.getElementById("glass-reflection-overlay");
   hourHand             = document.getElementById("hour-hand");
   minuteHand           = document.getElementById("minute-hand");
   secondHandContainer  = document.getElementById("second-hand-container");
@@ -45,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initDarkMode();
   buildDialMarks();
-  setupGlassStyles();
   startClock();
 });
 
@@ -87,38 +79,6 @@ function buildDialMarks() {
   }
 }
 
-function setupGlassStyles() {
-  const root = document.documentElement;
-
-  // Fixed light angles (same as original)
-  root.style.setProperty("--primary-light-angle", "-45deg");
-  root.style.setProperty("--dark-edge-angle", "135deg");
-
-  // Fixed glossy overlay
-  if (glossyOverlay) {
-    glossyOverlay.style.background = `
-      linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.9) 0%, 
-        rgba(255, 255, 255, 0.7) 15%, 
-        rgba(255, 255, 255, 0.5) 25%,
-        rgba(255, 255, 255, 0.3) 50%, 
-        rgba(255, 255, 255, 0.2) 75%, 
-        rgba(255, 255, 255, 0.1) 100%)
-    `;
-    glossyOverlay.style.filter = "blur(10px)";
-  }
-
-  // Fixed reflection overlay
-  if (reflectionOverlay) {
-    reflectionOverlay.style.transform = "rotate(-15deg)";
-    reflectionOverlay.style.filter = "blur(10px)";
-  }
-
-  // Initial CSS variables (same as original)
-  root.style.setProperty("--inner-shadow-opacity", "0.15");
-  root.style.setProperty("--reflection-opacity", "0.5");
-  root.style.setProperty("--glossy-opacity", "0.3");
-}
 
 // =========================
 //  CLOCK LOGIC
@@ -159,10 +119,10 @@ function updateHourAndMinuteHands() {
     minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
   }
 
-  // Date: only set once (now using MONTHS constant, optimization #1)
+  // Date: only set once (now using DAYS constant, optimization #1)
   if (dateDisplay && !dateDisplay.textContent) {
     dateDisplay.textContent =
-      `${MONTHS[now.getMonth()]} ${now.getDate()}`;
+      `${DAYS[now.getDay()]} ${now.getDate()}`;
   }
 
   // Timezone: only set once
