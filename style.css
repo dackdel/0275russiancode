@@ -195,18 +195,16 @@ body.dark-mode .dark-mode-toggle .moon-icon {
 .glass-effect-shadow::after {
   content: "";
   position: absolute;
-  inset: 0;
   border-radius: 50%;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.35) 60%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
   width: calc(100% - var(--shadow-offset) - 0.25em);
   height: calc(100% - var(--shadow-offset) - 0.25em);
   top: calc(var(--shadow-offset) - 0.5em);
   left: calc(var(--shadow-offset) - 0.875em);
-  padding: 0.125em;
-  box-sizing: border-box;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  overflow: visible;
   opacity: 0.8;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 15px 25px rgba(0, 0, 0, 0.05),
     0 20px 40px rgba(0, 0, 0, 0.05);
