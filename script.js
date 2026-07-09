@@ -39,6 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initDarkMode();
   buildDialMarks();
   startClock();
+
+  // iOS Safari only applies :active styles on tap when a touch listener
+  // is registered on the element (otherwise it treats it as non-interactive).
+  if (clockFace) {
+    clockFace.addEventListener("touchstart", () => {}, { passive: true });
+  }
 });
 
 // =========================

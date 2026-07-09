@@ -203,8 +203,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
   user-select: none;
   -webkit-user-select: none;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
   will-change: transform, box-shadow;
 }
 
