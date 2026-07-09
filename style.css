@@ -21,7 +21,6 @@
 
 :root {
   --inner-shadow-opacity: 0.15;
-  --outer-shadow-opacity: 1;
   --reflection-opacity: 0.5;
   --glossy-opacity: 0.3;
   --shadow-layer1-opacity: 0.1;
@@ -175,40 +174,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform;
-}
-
-/* Shadow container - OUTER SHADOW */
-.glass-effect-shadow {
-  --shadow-offset: 3em;
-  position: absolute;
-  width: calc(100% + var(--shadow-offset));
-  height: calc(100% + var(--shadow-offset));
-  top: calc(0% - var(--shadow-offset) / 2);
-  left: calc(0% - var(--shadow-offset) / 2);
-  filter: blur(10px);
-  -webkit-filter: blur(10px);
-  pointer-events: none;
-  z-index: 1;
-  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-  opacity: 1;
-}
-
-.glass-effect-shadow::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 0.35) 60%,
-    rgba(0, 0, 0, 0.15) 100%
-  );
-  width: calc(100% - var(--shadow-offset) - 0.25em);
-  height: calc(100% - var(--shadow-offset) - 0.25em);
-  top: calc(var(--shadow-offset) - 0.5em);
-  left: calc(var(--shadow-offset) - 0.875em);
-  opacity: 0.8;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 15px 25px rgba(0, 0, 0, 0.05),
-    0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
 .glass-clock-face {
@@ -403,14 +368,6 @@ body.dark-mode .dark-mode-toggle .moon-icon {
 }
 
 /* Hover effects */
-.glass-effect-wrapper:hover .glass-effect-shadow {
-  opacity: 0.9;
-}
-
-.glass-effect-wrapper:hover .glass-effect-shadow::after {
-  opacity: 0.85;
-}
-
 .glass-effect-wrapper:hover .glass-reflection-overlay {
   opacity: 0.8;
 }
