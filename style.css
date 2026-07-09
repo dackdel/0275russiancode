@@ -45,6 +45,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  height: 100dvh;
   margin: 0;
   background-color: rgba(215, 215, 215, 1);
   font-family: "Inter", -apple-system, sans-serif;
