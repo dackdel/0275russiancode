@@ -27,6 +27,7 @@
   --shadow-layer2-opacity: 0.1;
   --shadow-layer3-opacity: 0.1;
   --second-hand-color: #F36505;
+  --second-hand-width: max(1.5px, 0.57cqi);
   --hand-color: #000000;
   --minute-marker-color: rgba(0, 0, 0, 0.5);
   --minute-marker-opacity: 0.6;
@@ -223,13 +224,14 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 
 .glass-clock-container {
   position: relative;
-  width: 350px;
-  height: 350px;
+  width: 75vmin;
+  width: 75dvmin;
+  aspect-ratio: 1;
+  container-type: inline-size;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
-  margin-top: 20px;
 }
 
 /* Glass effect wrapper */
@@ -247,10 +249,10 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 }
 
 .glass-clock-face {
-  --border-width: clamp(2px, 0.0625em, 4px);
+  --border-width: clamp(1.5px, 0.57cqi, 4px);
   position: relative;
-  width: 350px;
-  height: 350px;
+  width: 100cqi;
+  height: 100cqi;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.03);
   background-image: linear-gradient(
@@ -261,11 +263,11 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   );
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
-  box-shadow: inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
-    inset 0 -0.4em 0.4em rgba(255, 255, 255, 0.5),
-    10px 5px 10px rgba(0, 0, 0, var(--shadow-layer1-opacity)),
-    10px 20px 20px rgba(0, 0, 0, var(--shadow-layer2-opacity)),
-    10px 55px 50px rgba(0, 0, 0, var(--shadow-layer3-opacity));
+  box-shadow: inset 0 1.83cqi 1.83cqi rgba(0, 0, 0, 0.1),
+    inset 0 -1.83cqi 1.83cqi rgba(255, 255, 255, 0.5),
+    2.86cqi 1.43cqi 2.86cqi rgba(0, 0, 0, var(--shadow-layer1-opacity)),
+    2.86cqi 5.71cqi 5.71cqi rgba(0, 0, 0, var(--shadow-layer2-opacity)),
+    2.86cqi 15.71cqi 14.29cqi rgba(0, 0, 0, var(--shadow-layer3-opacity));
   z-index: 3;
   overflow: hidden;
   pointer-events: auto;
@@ -301,7 +303,7 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.9),
-    0 0 12px rgba(255, 255, 255, 0.8);
+    0 0 3.43cqi rgba(255, 255, 255, 0.8);
   transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1),
     --primary-light-angle 500ms ease;
   opacity: 0.9;
@@ -311,13 +313,10 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 /* Edge highlight ring */
 .glass-edge-highlight {
   position: absolute;
-  width: 350px;
-  height: 350px;
+  inset: 0;
   border-radius: 50%;
-  top: 0;
-  left: 0;
   border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 2.86cqi rgba(255, 255, 255, 0.5);
   z-index: 8;
   pointer-events: none;
   opacity: 0.6;
@@ -326,13 +325,10 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 /* Dark edge shadow for bottom-right contrast - INNER SHADOW */
 .glass-edge-shadow {
   position: absolute;
-  width: 350px;
-  height: 350px;
+  inset: 0;
   border-radius: 50%;
-  top: 0;
-  left: 0;
-  box-shadow: inset -5px 5px 15px rgba(0, 0, 0, 0.3),
-    inset -8px 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: inset -1.43cqi 1.43cqi 4.29cqi rgba(0, 0, 0, 0.3),
+    inset -2.29cqi 2.29cqi 5.71cqi rgba(0, 0, 0, 0.2);
   z-index: 7;
   pointer-events: none;
   opacity: var(--inner-shadow-opacity);
@@ -370,11 +366,8 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 /* Prominent glossy overlay */
 .glass-glossy-overlay {
   position: absolute;
-  width: 350px;
-  height: 350px;
+  inset: 0;
   border-radius: 50%;
-  top: 0;
-  left: 0;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -388,17 +381,14 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   z-index: 6;
   mix-blend-mode: overlay;
   opacity: var(--glossy-opacity);
-  filter: blur(10px);
+  filter: blur(2.86cqi);
 }
 
 /* Glass reflection overlay */
 .glass-reflection-overlay {
   position: absolute;
-  width: 330px;
-  height: 330px;
+  inset: 2.86cqi;
   border-radius: 50%;
-  top: 10px;
-  left: 10px;
   background: radial-gradient(
     ellipse at 30% 30%,
     rgba(255, 255, 255, 0.6) 0%,
@@ -411,28 +401,25 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   mix-blend-mode: overlay;
   opacity: 0.7;
   transform: rotate(-15deg);
-  filter: blur(10px);
+  filter: blur(2.86cqi);
 }
 
 /* Light reflection effect */
 .glass-reflection {
   position: absolute;
-  width: 350px;
-  height: 175px;
-  top: 0;
-  left: 0;
+  inset: 0 0 50% 0;
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.7) 0%,
     rgba(255, 255, 255, 0.4) 40%,
     rgba(255, 255, 255, 0) 100%
   );
-  border-radius: 175px 175px 0 0;
+  border-radius: 50cqi 50cqi 0 0;
   pointer-events: none;
   z-index: 10;
   mix-blend-mode: soft-light;
   opacity: var(--reflection-opacity);
-  filter: blur(10px);
+  filter: blur(2.86cqi);
 }
 
 /* Hover effects */
@@ -445,9 +432,11 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 }
 
 .glass-effect-wrapper:active .glass-clock-face {
-  box-shadow: inset 0 0.4em 0.4em rgba(0, 0, 0, 0.1),
-    inset 0 -0.4em 0.4em rgba(255, 255, 255, 0.4), 0 5px 20px rgba(0, 0, 0, 0.1),
-    0 10px 30px rgba(0, 0, 0, 0.1), 0 15px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1.83cqi 1.83cqi rgba(0, 0, 0, 0.1),
+    inset 0 -1.83cqi 1.83cqi rgba(255, 255, 255, 0.4),
+    0 1.43cqi 5.71cqi rgba(0, 0, 0, 0.1),
+    0 2.86cqi 8.57cqi rgba(0, 0, 0, 0.1),
+    0 4.29cqi 11.43cqi rgba(0, 0, 0, 0.1);
 }
 
 /* Clock hour marks and numbers */
@@ -463,25 +452,23 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 /* Minute marker as lines */
 .minute-marker {
   position: absolute;
-  width: 1px;
-  height: 10px;
+  width: max(1px, 0.29cqi);
+  height: 2.86cqi;
   background-color: var(--minute-marker-color);
-  top: 10px;
-  left: 175px;
-  transform-origin: center 165px;
+  top: 2.86cqi;
+  left: 50cqi;
+  transform-origin: center 47.14cqi;
   box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
   opacity: var(--minute-marker-opacity);
 }
 
 .clock-number {
   position: absolute;
-  font-size: 16px;
+  font-size: 4.57cqi;
   font-weight: 500;
   color: var(--hour-number-color);
   text-align: center;
-  width: 30px;
-  height: 20px;
-  line-height: 20px;
+  transform: translate(-50%, -50%);
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   z-index: 15;
   opacity: var(--hour-number-opacity);
@@ -495,51 +482,53 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 .clock-hand {
   position: absolute;
   transform-origin: center bottom;
-  bottom: 175px;
-  left: 175px;
+  bottom: 50cqi;
+  left: 50cqi;
   z-index: 15;
   will-change: transform;
 }
 
 .hour-hand {
-  width: 10px;
-  height: 95px;
+  width: 2.86cqi;
+  height: 27.14cqi;
   background-color: var(--hand-color);
-  margin-left: -5px;
-  border-radius: 3px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  margin-left: -1.43cqi;
+  border-radius: 0.86cqi;
+  box-shadow: 0 0 1.43cqi rgba(0, 0, 0, 0.3);
 }
 
 .minute-hand {
-  width: 7px;
-  height: 140px;
+  width: 2cqi;
+  height: 40cqi;
   background-color: var(--hand-color);
-  margin-left: -3.5px;
-  border-radius: 2px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  margin-left: -1cqi;
+  border-radius: 0.57cqi;
+  box-shadow: 0 0 1.43cqi rgba(0, 0, 0, 0.3);
 }
 
 /* Clock center dot */
 .clock-center-dot {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 3.43cqi;
+  height: 3.43cqi;
   background: var(--second-hand-color);
   border-radius: 50%;
-  top: 169px;
-  left: 169px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 17;
-  box-shadow: 0 0 8px rgba(255, 107, 0, 0.4);
+  box-shadow: 0 0 2.29cqi rgba(255, 107, 0, 0.4);
 }
 
 /* Second hand container */
 .second-hand-container {
   position: absolute;
-  width: 2px;
-  height: 120px;
-  top: 55px;
-  left: 174px;
-  transform-origin: 1px 120px;
+  width: var(--second-hand-width);
+  height: 34.29cqi;
+  top: 15.71cqi;
+  left: 50cqi;
+  margin-left: calc(var(--second-hand-width) / -2);
+  transform-origin: 50% 100%;
   z-index: 17;
   will-change: transform;
 }
@@ -547,49 +536,51 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 /* Second hand */
 .second-hand {
   position: absolute;
-  width: 2px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   background-color: var(--second-hand-color);
   bottom: 0;
   left: 0;
-  box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+  box-shadow: 0 0 1.43cqi rgba(255, 107, 0, 0.5);
 }
 
 /* Second hand counterweight */
 .second-hand-counterweight {
   position: absolute;
-  width: 6px;
-  height: 14px;
+  width: 1.71cqi;
+  height: 4cqi;
   background-color: var(--second-hand-color);
-  bottom: -14px;
-  left: -2px;
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+  bottom: -4cqi;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 0 0 1.14cqi 1.14cqi;
+  box-shadow: 0 0 1.43cqi rgba(255, 107, 0, 0.5);
 }
 
 /* Second hand tip circle */
 .second-hand-tip {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 2.29cqi;
+  height: 2.29cqi;
   background-color: var(--second-hand-color);
   border-radius: 50%;
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+  box-shadow: 0 0 1.43cqi rgba(255, 107, 0, 0.5);
 }
 
 /* Second hand shadow */
 .second-hand-shadow {
   position: absolute;
-  width: 2px;
-  height: 120px;
-  top: 55px;
-  left: 174px;
-  transform-origin: 1px 120px;
+  width: var(--second-hand-width);
+  height: 34.29cqi;
+  top: 15.71cqi;
+  left: 50cqi;
+  margin-left: calc(var(--second-hand-width) / -2);
+  transform-origin: 50% 100%;
   z-index: 14;
-  filter: blur(2px);
+  filter: blur(0.57cqi);
   opacity: 0.3;
   will-change: transform;
 }
@@ -598,48 +589,50 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 .second-hand-shadow::before {
   content: "";
   position: absolute;
-  width: 2px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   background: transparent;
   bottom: 0;
   left: 0;
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 1.43cqi 0.29cqi rgba(0, 0, 0, 0.15);
 }
 
 /* Second hand shadow counterweight */
 .second-hand-shadow::after {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 16px;
+  width: 2.29cqi;
+  height: 4.57cqi;
   background: transparent;
-  bottom: -16px;
-  left: -3px;
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+  bottom: -4.57cqi;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 1.43cqi 0.29cqi rgba(0, 0, 0, 0.15);
 }
 
 /* Inner blur circle */
 .clock-center-blur {
   position: absolute;
-  width: 36px;
-  height: 36px;
-  top: 157px;
-  left: 157px;
+  width: 10.29cqi;
+  height: 10.29cqi;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: rgba(255, 255, 255, 0.35);
   border-radius: 50%;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   z-index: 16;
   pointer-events: none;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
-    inset 0 0 8px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 5.71cqi rgba(255, 255, 255, 0.4),
+    inset 0 0 2.29cqi rgba(255, 255, 255, 0.6);
 }
 
 .clock-logo {
   position: absolute;
   width: 100%;
   text-align: center;
-  top: 70px;
+  top: 20cqi;
   left: 0;
   z-index: 15;
   opacity: 0.9;
@@ -649,26 +642,26 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 
 .logo-subtext {
   font-family: "Inter", sans-serif;
-  font-size: 10px;
+  font-size: 2.86cqi;
   font-weight: 500;
   letter-spacing: 0.2em;
   color: rgba(50, 50, 50, 0.7);
-  margin-top: 2px;
+  margin-top: 0.57cqi;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
 }
 
 .clock-date {
   position: absolute;
-  font-size: 11px;
+  font-size: 3.14cqi;
   font-weight: 400;
   color: rgba(50, 50, 50, 0.75);
   text-align: center;
-  width: 140px;
+  width: 40cqi;
   height: auto;
   line-height: 1;
-  bottom: 75px;
-  left: 105px;
+  bottom: 21.43cqi;
+  left: 30cqi;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
   z-index: 15;
   user-select: none;
@@ -679,15 +672,15 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 
 .clock-timezone {
   position: absolute;
-  font-size: 11px;
+  font-size: 3.14cqi;
   font-weight: 500;
   color: rgba(50, 50, 50, 0.7);
   text-align: center;
-  width: 140px;
+  width: 40cqi;
   height: auto;
   line-height: 1;
-  bottom: 60px;
-  left: 105px;
+  bottom: 17.14cqi;
+  left: 30cqi;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
   z-index: 15;
   user-select: none;
@@ -696,262 +689,28 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   text-transform: uppercase;
 }
 
-/* Responsive Design */
-
-/* Tablet (iPad, iPad Pro) - 768px to 1024px */
-@media screen and (max-width: 1024px) and (min-width: 768px) {
-  .glass-clock-container {
-    width: 400px;
-    height: 400px;
-  }
-
-  .glass-clock-face,
-  .glass-glossy-overlay,
-  .glass-edge-highlight,
-  .glass-edge-shadow,
-  .glass-dark-edge,
-  .glass-reflection {
-    width: 400px;
-    height: 400px;
-  }
-
-  .glass-reflection-overlay {
-    width: 380px;
-    height: 380px;
-  }
-
+/* Legibility at small clock sizes (smartwatch and similar) */
+@container (max-width: 220px) {
   .clock-number {
-    font-size: 18px;
-  }
-
-  .minute-marker {
-    transform-origin: center 190px;
-    left: 200px;
-  }
-
-  .clock-hand {
-    bottom: 200px;
-    left: 200px;
-  }
-
-  .hour-hand {
-    width: 11px;
-    height: 110px;
-    margin-left: -5.5px;
-  }
-
-  .minute-hand {
-    width: 8px;
-    height: 160px;
-    margin-left: -4px;
-  }
-
-  .second-hand-container {
-    height: 140px;
-    top: 60px;
-    left: 199px;
-    transform-origin: 1px 140px;
-  }
-
-  .second-hand {
-    height: 140px;
-  }
-
-  .second-hand-tip {
-    width: 9px;
-    height: 9px;
-  }
-
-  .second-hand-shadow {
-    height: 140px;
-    top: 60px;
-    left: 199px;
-    transform-origin: 1px 140px;
-  }
-
-  .clock-center-dot {
-    top: 194px;
-    left: 194px;
-  }
-
-  .clock-center-blur {
-    top: 182px;
-    left: 182px;
-  }
-
-  .clock-date {
-    bottom: 85px;
-    left: 130px;
-  }
-
-  .clock-timezone {
-    bottom: 70px;
-    left: 130px;
-  }
-}
-
-/* Mobile (phones) - up to 767px */
-@media screen and (max-width: 767px) {
-  .glass-clock-container {
-    width: 280px;
-    height: 280px;
-    margin-top: 10px;
-  }
-
-  .glass-clock-face,
-  .glass-glossy-overlay,
-  .glass-edge-highlight,
-  .glass-edge-shadow,
-  .glass-dark-edge,
-  .glass-reflection {
-    width: 280px;
-    height: 280px;
-  }
-
-  .glass-reflection-overlay {
-    width: 260px;
-    height: 260px;
-  }
-
-  .clock-number {
-    font-size: 14px;
-    width: 24px;
-    height: 18px;
-    line-height: 18px;
     font-weight: 600;
   }
+}
 
-  .minute-marker {
-    height: 8px;
-    top: 8px;
-    left: 140px;
-    transform-origin: center 132px;
-  }
-
-  .clock-hand {
-    bottom: 140px;
-    left: 140px;
-  }
-
-  .hour-hand {
-    width: 8px;
-    height: 77px;
-    margin-left: -4px;
-  }
-
-  .minute-hand {
-    width: 6px;
-    height: 112px;
-    margin-left: -3px;
-  }
-
-  .second-hand-container {
-    width: 2px;
-    height: 96px;
-    top: 44px;
-    left: 139px;
-    transform-origin: 1px 96px;
-  }
-
-  .second-hand {
-    width: 2px;
-    height: 96px;
-  }
-
-  .second-hand-counterweight {
-    width: 5px;
-    height: 11px;
-    left: -1.5px;
-  }
-
-  .second-hand-tip {
-    width: 6px;
-    height: 6px;
-  }
-
-  .second-hand-shadow {
-    width: 2px;
-    height: 96px;
-    top: 44px;
-    left: 139px;
-    transform-origin: 1px 96px;
-  }
-
-  .clock-center-dot {
-    width: 10px;
-    height: 10px;
-    top: 135px;
-    left: 135px;
-  }
-
-  .clock-center-blur {
-    width: 28px;
-    height: 28px;
-    top: 126px;
-    left: 126px;
-  }
-
-  .clock-logo {
-    top: 56px;
-  }
-
-  .logo-subtext {
-    font-size: 8px;
-  }
-
-  .clock-date {
-    font-size: 9px;
-    width: 112px;
-    bottom: 60px;
-    left: 84px;
-  }
-
-  .clock-timezone {
-    font-size: 9px;
-    width: 112px;
-    bottom: 48px;
-    left: 84px;
+@container (max-width: 170px) {
+  .clock-number {
+    font-weight: 700;
   }
 }
 
-/* Apple Watch and very small screens - up to 320px */
+/* Toggle buttons on very small screens */
 @media screen and (max-width: 320px) {
-  .glass-clock-container {
-    width: 240px;
-    height: 240px;
-    margin-top: 5px;
-  }
-
-  .glass-clock-face,
-  .glass-glossy-overlay,
-  .glass-edge-highlight,
-  .glass-edge-shadow,
-  .glass-dark-edge,
-  .glass-reflection {
-    width: 240px;
-    height: 240px;
-  }
-
-  .glass-reflection-overlay {
-    width: 220px;
-    height: 220px;
-  }
-
-  .clock-number {
-    font-size: 12px;
-    width: 20px;
-    height: 16px;
-    line-height: 16px;
-    font-weight: 700;
-  }
-  
   .dark-mode-toggle {
     width: 40px;
     height: 40px;
     top: 10px;
     right: 10px;
   }
-  
+
   .dark-mode-toggle svg {
     width: 16px;
     height: 16px;
@@ -968,115 +727,5 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
     width: 16px;
     height: 16px;
   }
-
-  .minute-marker {
-    height: 6px;
-    top: 6px;
-    left: 120px;
-    transform-origin: center 114px;
-  }
-
-  .clock-hand {
-    bottom: 120px;
-    left: 120px;
-  }
-
-  .hour-hand {
-    width: 7px;
-    height: 66px;
-    margin-left: -3.5px;
-  }
-
-  .minute-hand {
-    width: 5px;
-    height: 96px;
-    margin-left: -2.5px;
-  }
-
-  .second-hand-container {
-    width: 1.5px;
-    height: 82px;
-    top: 38px;
-    left: 119.5px;
-    transform-origin: 0.75px 82px;
-  }
-
-  .second-hand {
-    width: 1.5px;
-    height: 82px;
-  }
-
-  .second-hand-counterweight {
-    width: 4px;
-    height: 9px;
-    left: -1.25px;
-  }
-
-  .second-hand-tip {
-    width: 5px;
-    height: 5px;
-  }
-
-  .second-hand-shadow {
-    width: 1.5px;
-    height: 82px;
-    top: 38px;
-    left: 119.5px;
-    transform-origin: 0.75px 82px;
-  }
-
-  .clock-center-dot {
-    width: 8px;
-    height: 8px;
-    top: 116px;
-    left: 116px;
-  }
-
-  .clock-center-blur {
-    width: 24px;
-    height: 24px;
-    top: 108px;
-    left: 108px;
-  }
-
-  .clock-logo {
-    top: 48px;
-  }
-
-  .logo-subtext {
-    font-size: 7px;
-  }
-
-  .clock-date {
-    font-size: 8px;
-    width: 96px;
-    bottom: 52px;
-    left: 72px;
-  }
-
-  .clock-timezone {
-    font-size: 8px;
-    width: 96px;
-    bottom: 42px;
-    left: 72px;
-  }
 }
 
-/* Landscape orientation adjustments */
-@media screen and (max-height: 600px) and (orientation: landscape) {
-  .glass-clock-container {
-    width: 260px;
-    height: 260px;
-    margin-top: 5px;
-  }
-
-  .glass-clock-face,
-  .glass-glossy-overlay,
-  .glass-edge-highlight,
-  .glass-edge-shadow,
-  .glass-dark-edge,
-  .glass-reflection {
-    width: 260px;
-    height: 260px;
-  }
-}

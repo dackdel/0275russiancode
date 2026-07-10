@@ -53,23 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
 function buildDialMarks() {
   if (!hourMarksContainer) return;
 
-  const size   = clockFace ? clockFace.offsetWidth : 350;
-  const center = size / 2;
-  const radius = size * 0.414; // same proportion as original (145/350)
+  // Positions are percentages of the clock face, so the dial scales with it
+  // (no resize handling needed). Radius: 41.4% of diameter (145/350).
+  const radius = 41.4;
 
   for (let i = 0; i < 60; i++) {
     if (i % 5 === 0) {
-      // Hour numbers
+      // Hour numbers (self-centered via translate(-50%, -50%) in CSS)
       const hourIndex = i / 5;
       const numberEl  = document.createElement("div");
       numberEl.className = "clock-number";
 
       const angleRad = (i * 6 * Math.PI) / 180;
-      const left = center + Math.sin(angleRad) * radius - 12;
-      const top  = center - Math.cos(angleRad) * radius - 9;
 
-      numberEl.style.left = `${left}px`;
-      numberEl.style.top  = `${top}px`;
+      numberEl.style.left = `${50 + Math.sin(angleRad) * radius}%`;
+      numberEl.style.top  = `${50 - Math.cos(angleRad) * radius}%`;
 
       // Numbers counterclockwise: 12, 11, ..., 1
       numberEl.textContent = hourIndex === 0 ? "12" : (12 - hourIndex).toString();
