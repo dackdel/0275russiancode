@@ -14,6 +14,8 @@ const secondsMode = "highFreq"; // "smooth" | "tick1" | "tick2" | "highFreq"
 
 // DOM references (filled on DOMContentLoaded)
 let hourMarksContainer;
+let accentMarksContainer;
+let sweepRotator;
 let clockFace;
 let hourHand;
 let minuteHand;
@@ -28,6 +30,8 @@ let timezoneDisplay;
 document.addEventListener("DOMContentLoaded", () => {
   // Cache DOM references
   hourMarksContainer   = document.getElementById("clock-hour-marks");
+  accentMarksContainer = document.getElementById("clock-hour-marks-accent");
+  sweepRotator         = document.getElementById("sweep-rotator");
   clockFace            = document.querySelector(".glass-clock-face");
   hourHand             = document.getElementById("hour-hand");
   minuteHand           = document.getElementById("minute-hand");
@@ -73,6 +77,11 @@ function buildDialMarks() {
       numberEl.textContent = hourIndex === 0 ? "12" : (12 - hourIndex).toString();
 
       hourMarksContainer.appendChild(numberEl);
+
+      // Accent copy for the second-hand sweep (revealed via wedge mask)
+      if (accentMarksContainer) {
+        accentMarksContainer.appendChild(numberEl.cloneNode(true));
+      }
     } else {
       // Minute markers
       const marker = document.createElement("div");
@@ -144,6 +153,15 @@ function updateHourAndMinuteHands() {
 // =========================
 //  SECONDS HAND
 // =========================
+
+// Spin the wedge mask with the second hand; counter-rotate the accent
+// numbers inside so they stay visually fixed while the wedge sweeps.
+function updateSweepMask() {
+  if (!sweepRotator || !accentMarksContainer) return;
+  sweepRotator.style.transform         = `rotate(${secondsAngle}deg)`;
+  accentMarksContainer.style.transform = `rotate(${-secondsAngle}deg)`;
+}
+
 function animateSecondHand() {
   // Cancel only the smooth-mode RAF loop, if any
   if (secondsAnimationFrameId != null) {
@@ -200,6 +218,8 @@ function animateTickMode(ticksPerSecond) {
         secondHandShadow.style.transition = "none";
         secondHandShadow.style.transform  = `rotate(${secondsAngle - 0.5}deg)`;
       }
+
+      updateSweepMask();
     }
 
     // same logic: poll frequently to catch ticks
@@ -237,6 +257,8 @@ function animateSmoothMode() {
       secondHandShadow.style.transform =
         `rotate(${secondsAngle - 0.5}deg) translateZ(0)`;
     }
+
+    updateSweepMask();
 
     secondsAnimationFrameId = requestAnimationFrame(step);
   }

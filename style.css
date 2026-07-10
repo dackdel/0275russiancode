@@ -461,6 +461,45 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   z-index: 14;
 }
 
+/* Second-hand sweep: wedge mask pointing at 12 o'clock. The rotator spins
+   with the second hand; the accent numbers inside counter-rotate so they
+   stay visually fixed while the wedge sweeps over them. */
+.sweep-rotator {
+  /* Half the wedge's angular width. The hand is 0.57cqi wide and the
+     numerals sit at a 41.4cqi radius, so it subtends ~0.8deg out there. */
+  --sweep-half: 0.4deg;
+  position: absolute;
+  inset: 0;
+  z-index: 16;
+  pointer-events: none;
+  will-change: transform;
+  -webkit-mask-image: conic-gradient(
+    from calc(-1 * var(--sweep-half)) at 50% 50%,
+    #000 0 calc(2 * var(--sweep-half)),
+    transparent calc(2 * var(--sweep-half))
+  );
+  mask-image: conic-gradient(
+    from calc(-1 * var(--sweep-half)) at 50% 50%,
+    #000 0 calc(2 * var(--sweep-half)),
+    transparent calc(2 * var(--sweep-half))
+  );
+}
+
+.clock-hour-marks-accent {
+  will-change: transform;
+}
+
+.clock-hour-marks-accent .clock-number {
+  color: var(--second-hand-color);
+  text-shadow: none;
+  opacity: 1;
+}
+
+body.dark-mode .clock-hour-marks-accent .clock-number {
+  color: var(--second-hand-color);
+  text-shadow: none;
+}
+
 /* Minute marker as lines */
 .minute-marker {
   position: absolute;
@@ -496,7 +535,9 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   transform-origin: center bottom;
   bottom: 50cqi;
   left: 50cqi;
-  z-index: 15;
+  /* Above the logo/date/timezone text (15) so the hands sweep over it,
+     below the second hand and center dot (17). */
+  z-index: 16;
   will-change: transform;
 }
 
