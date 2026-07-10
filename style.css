@@ -242,9 +242,9 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   background: transparent;
   pointer-events: none;
   transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+  /* No perspective/preserve-3d here: a 3D rendering context stops Safari
+     from clipping composited (filtered) descendants to the face's
+     border-radius, leaking a blurred halo outside the clock edge. */
   will-change: transform;
 }
 
@@ -383,6 +383,10 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   mix-blend-mode: overlay;
   opacity: var(--glossy-opacity);
   filter: blur(2.86cqi);
+  /* Safari won't clip filtered layers to the face's overflow:hidden
+     border-radius; clip-path applies after the blur and is respected. */
+  -webkit-clip-path: circle(50%);
+  clip-path: circle(50%);
 }
 
 /* Glass reflection overlay */
@@ -403,6 +407,10 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   opacity: 0.7;
   transform: rotate(-15deg);
   filter: blur(2.86cqi);
+  /* Safari filter-clip bug; radius extends past the 2.86cqi inset so the
+     clip lands exactly on the face edge, matching the old overflow clip. */
+  -webkit-clip-path: circle(calc(50% + 2.86cqi));
+  clip-path: circle(calc(50% + 2.86cqi));
 }
 
 /* Light reflection effect */
@@ -421,6 +429,9 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
   mix-blend-mode: soft-light;
   opacity: var(--reflection-opacity);
   filter: blur(2.86cqi);
+  /* Safari filter-clip bug; clip to this layer's own semicircle shape. */
+  -webkit-clip-path: inset(0 round 50cqi 50cqi 0 0);
+  clip-path: inset(0 round 50cqi 50cqi 0 0);
 }
 
 /* Hover effects */
