@@ -261,8 +261,9 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
     rgba(255, 255, 255, 0.04),
     rgba(255, 255, 255, 0.01)
   );
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+  /* No backdrop-filter here: combined with this element's box-shadow it
+     triggers a compositing bug (mobile WebKit especially) that smears a
+     blurred halo outside the border-radius clip. */
   box-shadow: inset 0 1.83cqi 1.83cqi rgba(0, 0, 0, 0.1),
     inset 0 -1.83cqi 1.83cqi rgba(255, 255, 255, 0.5),
     2.86cqi 1.43cqi 2.86cqi rgba(0, 0, 0, var(--shadow-layer1-opacity)),
