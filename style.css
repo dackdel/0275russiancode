@@ -536,8 +536,8 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 .second-hand-container {
   position: absolute;
   width: var(--second-hand-width);
-  height: 34.29cqi;
-  top: 15.71cqi;
+  height: 42.86cqi;
+  top: 7.14cqi;
   left: 50cqi;
   margin-left: calc(var(--second-hand-width) / -2);
   transform-origin: 50% 100%;
@@ -586,8 +586,8 @@ body.dark-mode.shader-on .shader-toggle .leaf-icon {
 .second-hand-shadow {
   position: absolute;
   width: var(--second-hand-width);
-  height: 34.29cqi;
-  top: 15.71cqi;
+  height: 42.86cqi;
+  top: 7.14cqi;
   left: 50cqi;
   margin-left: calc(var(--second-hand-width) / -2);
   transform-origin: 50% 100%;
