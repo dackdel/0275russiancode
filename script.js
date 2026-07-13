@@ -2,15 +2,17 @@
 //  CONSTANTS & STATE
 // =========================
 
-// Used for the date label (optimization #1: hoisted from inside the function)
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
-let secondsAngle = 0;
-let secondsAnimationFrameId = null;
-
-// Optimization #3: secondsMode is const because we never reassign it
 // If you later want to switch modes dynamically, change this back to `let`.
 const secondsMode = "highFreq"; // "smooth" | "tick1" | "tick2" | "highFreq"
+
+let rafId = null;
+let secondsAngle = 0;
+let lastHourDeg = null;
+let lastMinuteDeg = null;
+let lastSecondsAngle = null;
+let transitionsCleared = false;
 
 // DOM references (filled on DOMContentLoaded)
 let hourMarksContainer;
@@ -28,7 +30,6 @@ let timezoneDisplay;
 //  INIT
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
-  // Cache DOM references
   hourMarksContainer   = document.getElementById("clock-hour-marks");
   accentMarksContainer = document.getElementById("clock-hour-marks-accent");
   sweepRotator         = document.getElementById("sweep-rotator");
@@ -43,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initDarkMode();
   buildDialMarks();
   startClock();
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
   // iOS Safari only applies :active styles on tap when a touch listener
   // is registered on the element (otherwise it treats it as non-interactive).
@@ -63,7 +66,6 @@ function buildDialMarks() {
 
   for (let i = 0; i < 60; i++) {
     if (i % 5 === 0) {
-      // Hour numbers (self-centered via translate(-50%, -50%) in CSS)
       const hourIndex = i / 5;
       const numberEl  = document.createElement("div");
       numberEl.className = "clock-number";
@@ -78,12 +80,10 @@ function buildDialMarks() {
 
       hourMarksContainer.appendChild(numberEl);
 
-      // Accent copy for the second-hand sweep (revealed via wedge mask)
       if (accentMarksContainer) {
         accentMarksContainer.appendChild(numberEl.cloneNode(true));
       }
     } else {
-      // Minute markers
       const marker = document.createElement("div");
       marker.className = "minute-marker";
       marker.style.transform = `rotate(${i * 6}deg)`;
@@ -92,178 +92,138 @@ function buildDialMarks() {
   }
 }
 
-
 // =========================
-//  CLOCK LOGIC
+//  CLOCK LOGIC (shared RAF)
 // =========================
 function startClock() {
-  // Optimization #4: defensive check – doesn't affect your page, but prevents errors
-  if (!hourHand || !minuteHand || !secondHandContainer) {
-    // Required elements missing — do nothing
-    return;
-  }
+  if (!hourHand || !minuteHand || !secondHandContainer) return;
+  if (rafId != null) return;
 
-  // Start hour + minute hands (smooth, real-time)
-  updateHourAndMinuteHands();
-  // Start seconds hand animation (mode-dependent)
-  animateSecondHand();
+  ensureTransitionsOff();
+  // Snap immediately so resume-from-hidden doesn't wait a frame.
+  updateClock(true);
+  rafId = requestAnimationFrame(clockFrame);
 }
 
-// Hour + minute: smooth reverse (counterclockwise) motion
-function updateHourAndMinuteHands() {
-  const now      = new Date();
-  const hours    = now.getHours() % 12;
-  const minutes  = now.getMinutes();
-  const seconds  = now.getSeconds();
-
-  if (hourHand && minuteHand) {
-    // identical math to your original version
-    const hoursDegrees = -(
-      hours * 30 +
-      (minutes / 60) * 30 +
-      (seconds / 3600) * 30
-    );
-    const minutesDegrees = -(
-      minutes * 6 +
-      (seconds / 60) * 6
-    );
-
-    hourHand.style.transform   = `rotate(${hoursDegrees}deg)`;
-    minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+function stopClock() {
+  if (rafId != null) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
   }
-
-  // Date: only set once (now using DAYS constant, optimization #1)
-  if (dateDisplay && !dateDisplay.textContent) {
-    dateDisplay.textContent =
-      `${DAYS[now.getDay()]} ${now.getDate()}`;
-  }
-
-  // Timezone: only set once
-  if (timezoneDisplay && !timezoneDisplay.hasAttribute("data-initialized")) {
-    const tzName  = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const city    = tzName.split("/").pop().replace(/_/g, " ");
-    timezoneDisplay.textContent = city;
-    timezoneDisplay.setAttribute("data-initialized", "true");
-  }
-
-  // Keep updating smoothly
-  requestAnimationFrame(updateHourAndMinuteHands);
 }
 
-// =========================
-//  SECONDS HAND
-// =========================
+function handleVisibilityChange() {
+  if (document.hidden) {
+    stopClock();
+  } else {
+    // Force a write on resume even if angles match cached values.
+    lastHourDeg = null;
+    lastMinuteDeg = null;
+    lastSecondsAngle = null;
+    startClock();
+  }
+}
 
-// Spin the wedge mask with the second hand; counter-rotate the accent
-// numbers inside so they stay visually fixed while the wedge sweeps.
+function clockFrame() {
+  rafId = null;
+  if (document.hidden) return;
+
+  updateClock(false);
+  rafId = requestAnimationFrame(clockFrame);
+}
+
+function ensureTransitionsOff() {
+  if (transitionsCleared) return;
+  if (secondHandContainer) secondHandContainer.style.transition = "none";
+  if (secondHandShadow) secondHandShadow.style.transition = "none";
+  transitionsCleared = true;
+}
+
+function ticksPerSecondForMode() {
+  switch (secondsMode) {
+    case "tick1":    return 1;
+    case "tick2":    return 2;
+    case "highFreq": return 10;
+    case "smooth":
+    default:         return 0; // continuous
+  }
+}
+
+function computeSecondsAngle(seconds, milliseconds) {
+  const ticksPerSecond = ticksPerSecondForMode();
+
+  if (ticksPerSecond === 0) {
+    // Smooth: 6° per second + fractional ms
+    return -(seconds * 6 + (milliseconds / 1000) * 6);
+  }
+
+  const intervalMs           = 1000 / ticksPerSecond;
+  const timeInMs             = seconds * 1000 + milliseconds;
+  const tickIndex            = Math.floor(timeInMs / intervalMs);
+  const totalTicksInRotation = ticksPerSecond * 60;
+  const currentTick          = tickIndex % totalTicksInRotation;
+
+  return -(currentTick * (360 / totalTicksInRotation));
+}
+
 function updateSweepMask() {
   if (!sweepRotator || !accentMarksContainer) return;
   sweepRotator.style.transform         = `rotate(${secondsAngle}deg)`;
   accentMarksContainer.style.transform = `rotate(${-secondsAngle}deg)`;
 }
 
-function animateSecondHand() {
-  // Cancel only the smooth-mode RAF loop, if any
-  if (secondsAnimationFrameId != null) {
-    cancelAnimationFrame(secondsAnimationFrameId);
-    secondsAnimationFrameId = null;
+function updateClock(force) {
+  const now          = new Date();
+  const hours        = now.getHours() % 12;
+  const minutes      = now.getMinutes();
+  const seconds      = now.getSeconds();
+  const milliseconds = now.getMilliseconds();
+
+  const hoursDegrees = -(
+    hours * 30 +
+    (minutes / 60) * 30 +
+    (seconds / 3600) * 30
+  );
+  const minutesDegrees = -(
+    minutes * 6 +
+    (seconds / 60) * 6
+  );
+
+  secondsAngle = computeSecondsAngle(seconds, milliseconds);
+
+  if (force || hoursDegrees !== lastHourDeg) {
+    hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+    lastHourDeg = hoursDegrees;
   }
 
-  if (!secondHandContainer) return;
-
-  switch (secondsMode) {
-    case "tick1":   // tick per second
-      animateTickMode(1); // optimization #2: only ticksPerSecond
-      break;
-    case "tick2":   // 2 ticks per second
-      animateTickMode(2);
-      break;
-    case "highFreq": // 10 ticks per second (5Hz balance, i.e. 36,000 vph)
-      animateTickMode(10);
-      break;
-    case "smooth":
-    default:
-      animateSmoothMode();
-      break;
-  }
-}
-
-// Optimization #2: animateTickMode now only takes ticksPerSecond
-function animateTickMode(ticksPerSecond) {
-  let lastTickTime = 0;
-  const intervalMs = 1000 / ticksPerSecond;
-
-  function tick() {
-    const now          = new Date();
-    const seconds      = now.getSeconds();
-    const milliseconds = now.getMilliseconds();
-    const timeInMs     = seconds * 1000 + milliseconds;
-
-    const tickIndex       = Math.floor(timeInMs / intervalMs);
-    const currentTickTime = tickIndex * intervalMs;
-
-    if (currentTickTime !== lastTickTime) {
-      lastTickTime = currentTickTime;
-
-      const totalTicksInRotation = ticksPerSecond * 60;
-      const currentTick          = tickIndex % totalTicksInRotation;
-
-      // Reverse (counterclockwise) angle, identical to original
-      secondsAngle = -(currentTick * (360 / totalTicksInRotation));
-
-      secondHandContainer.style.transition = "none";
-      secondHandContainer.style.transform  = `rotate(${secondsAngle}deg)`;
-
-      if (secondHandShadow) {
-        secondHandShadow.style.transition = "none";
-        secondHandShadow.style.transform  = `rotate(${secondsAngle - 0.5}deg)`;
-      }
-
-      updateSweepMask();
-    }
-
-    // same logic: poll frequently to catch ticks
-    setTimeout(tick, 10);
+  if (force || minutesDegrees !== lastMinuteDeg) {
+    minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+    lastMinuteDeg = minutesDegrees;
   }
 
-  tick();
-}
-
-// Smooth animation (RAF loop)
-function animateSmoothMode() {
-  if (!secondHandContainer) return;
-
-  // Same performance hints as original
-  secondHandContainer.style.willChange = "transform";
-  secondHandContainer.style.transition = "none";
-
-  if (secondHandShadow) {
-    secondHandShadow.style.willChange = "transform";
-    secondHandShadow.style.transition = "none";
-  }
-
-  function step() {
-    const now          = new Date();
-    const seconds      = now.getSeconds();
-    const milliseconds = now.getMilliseconds();
-
-    // Same formula: 6° per second, plus fraction
-    secondsAngle = -(seconds * 6 + (milliseconds / 1000) * 6);
-
-    secondHandContainer.style.transform =
-      `rotate(${secondsAngle}deg) translateZ(0)`;
+  if (force || secondsAngle !== lastSecondsAngle) {
+    secondHandContainer.style.transform = `rotate(${secondsAngle}deg)`;
 
     if (secondHandShadow) {
-      secondHandShadow.style.transform =
-        `rotate(${secondsAngle - 0.5}deg) translateZ(0)`;
+      secondHandShadow.style.transform = `rotate(${secondsAngle - 0.5}deg)`;
     }
 
     updateSweepMask();
-
-    secondsAnimationFrameId = requestAnimationFrame(step);
+    lastSecondsAngle = secondsAngle;
   }
 
-  secondsAnimationFrameId = requestAnimationFrame(step);
+  // Date: only set once
+  if (dateDisplay && !dateDisplay.textContent) {
+    dateDisplay.textContent = `${DAYS[now.getDay()]} ${now.getDate()}`;
+  }
+
+  // Timezone: only set once
+  if (timezoneDisplay && !timezoneDisplay.hasAttribute("data-initialized")) {
+    const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const city   = tzName.split("/").pop().replace(/_/g, " ");
+    timezoneDisplay.textContent = city;
+    timezoneDisplay.setAttribute("data-initialized", "true");
+  }
 }
 
 // =========================
