@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Dackdel D-01 hands  true scale, units = mm. Origin at pipe center. -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="40mm" height="40mm"
+     viewBox="-20 -20 40 40">
+  <title>Dackdel D-01 Hands</title>
+  <defs>
+    <style type="text/css"><![CDATA[
+      .hour { fill: #111; }
+      .minute { fill: #111; }
+      .second { fill: #F36505; }
+      .guide { fill: none; stroke: #ddd; stroke-width: 0.05; stroke-dasharray: 0.3 0.3; }
+      .label {
+        fill: #888; font-family: Helvetica, Arial, sans-serif;
+        font-size: 0.8px;
+      }
+    ]]></style>
+  </defs>
+
+  <!-- Layout guides (not for manufacture) -->
+  <circle class="guide" r="16.25"/>
+  <text class="label" x="-19" y="-18">mm scale  dial � 32.5 shown as guide</text>
+
+  <!-- Hour hand: length 8.82, width 0.93, tip toward -Y (12) -->
+  <g id="hour-hand" transform="translate(-8, 0)">
+    <rect class="hour" x="-0.465" y="-8.82" width="0.93" height="8.82" rx="0.28"/>
+    <circle class="hour" r="0.55"/>
+    <text class="label" x="-1.2" y="2.2">hour</text>
+  </g>
+
+  <!-- Minute hand: length 13.00, width 0.65 -->
+  <g id="minute-hand" transform="translate(0, 0)">
+    <rect class="minute" x="-0.325" y="-13.00" width="0.65" height="13.00" rx="0.19"/>
+    <circle class="minute" r="0.45"/>
+    <text class="label" x="0.8" y="2.2">minute</text>
+  </g>
+
+  <!-- Seconds: tip 13.93, counterweight 1.30, tip disc � 0.74, width 0.19 -->
+  <g id="second-hand" transform="translate(8, 0)">
+    <rect class="second" x="-0.095" y="-13.93" width="0.19" height="13.93"/>
+    <rect class="second" x="-0.28" y="0" width="0.56" height="1.30" rx="0.15"/>
+    <circle class="second" cx="0" cy="-13.93" r="0.37"/>
+    <circle class="second" r="0.35"/>
+    <text class="label" x="0.8" y="2.2">seconds</text>
+  </g>
+
+  <!-- Center cap reference -->
+  <g transform="translate(0, 12)">
+    <circle class="second" r="0.555"/>
+    <text class="label" x="1.0" y="0.3">center cap � 1.11</text>
+  </g>
+</svg>

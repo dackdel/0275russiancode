@@ -6,6 +6,7 @@ const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 // If you later want to switch modes dynamically, change this back to `let`.
 const secondsMode = "highFreq"; // "smooth" | "tick1" | "tick2" | "highFreq"
+window.DackdelSound?.setMode(secondsMode);
 
 let rafId = null;
 let secondsAngle = 0;

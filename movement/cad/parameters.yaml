@@ -1,0 +1,84 @@
+# Dackdel Caliber D-01 — CadQuery parameters (mm unless noted)
+# Update escapement.* after measuring the purchased 36k kit.
+
+meta:
+  caliber: D-01
+  version: "0.1.0"
+
+dial:
+  diameter: 32.5
+
+case:
+  outer_diameter: 40.0
+  thickness: 11.5
+  lug_width: 20.0
+  crystal_inner: 33.0
+
+movement:
+  diameter: 26.0
+  mainplate_thickness: 1.6
+  bridge_thickness: 1.2
+  balance_cock_thickness: 0.8
+
+gear:
+  module: 0.10
+  pressure_angle_deg: 20
+  seconds_idler: false
+
+teeth:
+  barrel: 80
+  center_pinion: 10
+  center_wheel: 75
+  third_pinion: 10
+  third_wheel: 64
+  fourth_pinion: 8
+  fourth_wheel: 90
+  escape_pinion: 6
+  escape_wheel: 20  # purchased
+  ccw_idler: 40
+  cannon_drive: 40
+  reverse_on_center: 40
+
+# Arbor XY — spaced to match gear-train center distances (m=0.10)
+arbors:
+  center: { x: 0.0, y: 0.0 }
+  barrel: { x: 4.50, y: 0.0 }
+  third: { x: -2.125, y: 3.681 }
+  fourth: { x: -5.243, y: 1.881 }
+  escape: { x: -8.920, y: -1.205 }
+  balance: { x: -8.20, y: -6.50 }
+  ccw_idler: { x: 3.064, y: -2.571 }
+  stem: { x: 11.5, y: 0.0 }
+
+jewels:
+  barrel: { bore: 0.80, pivot: 0.70 }
+  center: { bore: 0.50, pivot: 0.40 }
+  third: { bore: 0.40, pivot: 0.30 }
+  fourth: { bore: 0.40, pivot: 0.30 }
+  escape: { bore: 0.35, pivot: 0.25 }
+  pallet: { bore: 0.30, pivot: 0.20 }
+  balance_shock: { bore: 0.0, pivot: 0.0 }
+
+escapement:
+  supplier: "TBD — measure donor / assortment"
+  beat_rate_vph: 36000
+  escape_teeth: 20
+  escape_pinion_leaves: 6
+  balance_diameter: 9.5
+  balance_staff_diameter: 0.0
+  pallet_staff_diameter: 0.0
+  keepout_radius: 4.75
+  notes: >
+    Do not CNC escape wheel or pallet. Lock jewel XY to kit drawing
+    before final plate machining.
+
+wheel_thickness:
+  center: 0.15
+  third: 0.12
+  fourth: 0.12
+  idler: 0.15
+  barrel_drum: 1.8
+
+export:
+  scale_prototype: 3.0
+  formats: ["step", "stl"]

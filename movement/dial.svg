@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Dackdel D-01 dial  true scale, units = mm. Dial � 32.50 mm. -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="32.5mm" height="32.5mm"
+     viewBox="0 0 32.5 32.5">
+  <title>Dackdel D-01 Dial</title>
+  <defs>
+    <style type="text/css"><![CDATA[
+      .face { fill: #f2f2f2; stroke: #bbb; stroke-width: 0.15; }
+      .marker { stroke: #666; stroke-width: 0.09; stroke-linecap: butt; }
+      .num {
+        fill: #323232; font-family: Helvetica, Arial, sans-serif;
+        font-size: 1.49px; font-weight: 500; text-anchor: middle;
+        dominant-baseline: central;
+      }
+      .logo {
+        fill: #505050; font-family: Helvetica, Arial, sans-serif;
+        font-size: 0.93px; font-weight: 500; letter-spacing: 0.18px;
+        text-anchor: middle; text-transform: uppercase;
+      }
+      .meta {
+        fill: #505050; font-family: Helvetica, Arial, sans-serif;
+        font-size: 1.02px; text-anchor: middle;
+      }
+      .date-window { fill: #fff; stroke: #888; stroke-width: 0.08; }
+    ]]></style>
+  </defs>
+
+  <!-- Face -->
+  <circle class="face" cx="16.25" cy="16.25" r="16.25"/>
+
+  <!-- Minute markers (skip hour positions) -->
+  <g id="minute-markers">
+    <!-- generated: 60 ticks; hour marks omitted in favor of numerals -->
+    <g transform="translate(16.25,16.25)">
+      <!-- markers at r_outer=15.32 (2.86cqi from edge), length 0.93 -->
+      <!-- i=1..59 except multiples of 5 -->
+      <line class="marker" transform="rotate(6)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(12)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(18)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(24)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(36)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(42)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(48)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(54)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(66)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(72)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(78)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(84)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(96)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(102)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(108)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(114)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(126)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(132)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(138)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(144)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(156)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(162)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(168)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(174)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(186)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(192)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(198)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(204)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(216)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(222)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(228)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(234)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(246)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(252)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(258)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(264)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(276)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(282)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(288)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(294)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(306)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(312)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(318)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(324)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(336)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(342)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(348)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+      <line class="marker" transform="rotate(354)" x1="0" y1="-15.32" x2="0" y2="-14.39"/>
+    </g>
+  </g>
+
+  <!-- CCW numerals: at clock angle i*30�, label is 12,11,10,... (matches script.js) -->
+  <!-- Position: r = 13.46 mm; angle 0� = 12 o'clock, positive CW -->
+  <g id="numerals">
+    <text class="num" x="16.25" y="2.79">12</text>
+    <text class="num" x="23.00" y="4.60">11</text>
+    <text class="num" x="27.90" y="9.50">10</text>
+    <text class="num" x="29.71" y="16.25">9</text>
+    <text class="num" x="27.90" y="23.00">8</text>
+    <text class="num" x="23.00" y="27.90">7</text>
+    <text class="num" x="16.25" y="29.71">6</text>
+    <text class="num" x="9.50" y="27.90">5</text>
+    <text class="num" x="4.60" y="23.00">4</text>
+    <text class="num" x="2.79" y="16.25">3</text>
+    <text class="num" x="4.60" y="9.50">2</text>
+    <text class="num" x="9.50" y="4.60">1</text>
+  </g>
+
+  <text class="logo" x="16.25" y="6.50">DACKDEL</text>
+
+  <!-- Date window at 6 o'clock -->
+  <rect class="date-window" x="15.00" y="22.40" width="2.50" height="1.40" rx="0.15"/>
+
+  <text class="meta" x="16.25" y="25.20">CITY</text>
+
+  <!-- Hand bore clearance -->
+  <circle cx="16.25" cy="16.25" r="0.60" fill="none" stroke="#ccc" stroke-width="0.05"/>
+</svg>
