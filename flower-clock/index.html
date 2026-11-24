@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lotus clock</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="flower" aria-label="Generative lotus. Its bloom is how far the current hour has passed."></canvas>
+
+  <div class="readout">
+    <a class="back" href="../">dackdel</a>
+    <div class="species" id="species">Lotus</div>
+    <div class="time" id="time">--:--:--</div>
+    <div class="bloom" id="bloom-label">bloom 0%</div>
+  </div>
+
+  <form class="scrub" id="scrub">
+    <label class="hour">
+      Hour
+      <input id="hour" type="number" min="0" max="23" step="1" value="0" inputmode="numeric">
+    </label>
+    <label class="through">
+      Through the hour
+      <input id="progress" type="range" min="0" max="3599" step="1" value="0" aria-valuemin="0" aria-valuemax="3599">
+    </label>
+    <button type="button" id="live" aria-pressed="true">Live</button>
+  </form>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
